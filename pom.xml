@@ -13,7 +13,7 @@
     JavaNCSS is a simple command line utility which measures two standard source code metrics for the Java programming
     language. The metrics are collected globally, for each class and/or for each function.
   </description>
-  <url>http://javancss.codehaus.org/</url>
+  <url>https://github.com/JavaNCSS/javancss</url>
 
   <inceptionYear>1997</inceptionYear>
 
@@ -29,44 +29,15 @@
     </license>
   </licenses>
 
-  <mailingLists>
-    <mailingList>
-      <name>Development List</name>
-      <subscribe>dev-subscribe@javancss.codehaus.org</subscribe>
-      <unsubscribe>dev-unsubscribe@javancss.codehaus.org</unsubscribe>
-      <post>dev@javancss.codehaus.org</post>
-      <archive>http://markmail.org/list/org.codehaus.javancss.dev</archive>
-    </mailingList>
-    <mailingList>
-      <name>User List</name>
-      <subscribe>user-subscribe@javancss.codehaus.org</subscribe>
-      <unsubscribe>user-unsubscribe@javancss.codehaus.org</unsubscribe>
-      <post>user@javancss.codehaus.org</post>
-      <archive>http://markmail.org/list/org.codehaus.javancss.user</archive>
-    </mailingList>
-    <mailingList>
-      <name>Commits List</name>
-      <subscribe>scm-subscribe@javancss.codehaus.org</subscribe>
-      <unsubscribe>scm-unsubscribe@javancss.codehaus.org</unsubscribe>
-      <archive>http://markmail.org/list/org.codehaus.javancss.scm</archive>
-    </mailingList>
-    <mailingList>
-      <name>Announce</name>
-      <subscribe>announce-subscribe@javancss.codehaus.org</subscribe>
-      <unsubscribe>announce-unsubscribe@javancss.codehaus.org</unsubscribe>
-      <archive>http://markmail.org/list/org.codehaus.javancss.announce</archive>
-    </mailingList>
-  </mailingLists>
-
   <issueManagement>
-    <system>jira</system>
-    <url>http://jira.codehaus.org/browse/JAVANCSS</url>
+    <system>github</system>
+    <url>https://github.com/JavaNCSS/javancss/issues</url>
   </issueManagement>
 
   <scm>
-    <connection>scm:svn:http://svn.codehaus.org/javancss/trunk/</connection>
-    <developerConnection>scm:svn:https://svn.codehaus.org/javancss/trunk/</developerConnection>
-    <url>http://fisheye.codehaus.org/browse/javancss/trunk/</url>
+    <connection>scm:git:https://github.com/JavaNCSS/javancss.git</connection>
+    <developerConnection>scm:git:https://github.com/JavaNCSS/javancss.git</developerConnection>
+    <url>https://github.com/JavaNCSS/javancss</url>
   </scm>
 
   <distributionManagement>
@@ -80,11 +51,6 @@
       <name>Modello Development Repository</name>
       <url>https://oss.sonatype.org/content/repositories/snapshots</url>
     </snapshotRepository>
-    <site>
-      <id>codehaus.org</id>
-      <name>JavaNCSS Website</name>
-      <url>dav:https://dav.codehaus.org/javancss/</url>
-    </site>
   </distributionManagement>
 
   <developers>
@@ -97,7 +63,7 @@
     <developer>
       <id>hboutemy</id>
       <name>Hervé Boutemy</name>
-      <email>hboutemy@codehaus.org</email>
+      <email>hboutemy@apache.org</email>
       <timezone>Europe/Paris</timezone>
     </developer>
     <developer>
