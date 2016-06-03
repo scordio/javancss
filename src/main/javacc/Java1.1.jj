@@ -1357,7 +1357,7 @@ void ClassBodyDeclaration() :
 void MethodDeclarationLookahead() :
 {}
 {
-  ( "public" | "protected" | "private" | "static" | "abstract" | "final" | "native" | "synchronized" | "strictfp" | Annotation() )*
+  ( "public" | "protected" | "private" | "default" | "static" | "abstract" | "final" | "native" | "synchronized" | "strictfp" | Annotation() )*
   [ TypeParameters() ]
   ResultType() Identifier() "("
 }
@@ -1757,6 +1757,12 @@ void MethodDeclaration() :
       }
   }
     | "private"
+  {
+      if ( tmpToken == null ) {
+          tmpToken = getToken( 0 );
+      }
+  }
+| "default"
   {
       if ( tmpToken == null ) {
           tmpToken = getToken( 0 );
