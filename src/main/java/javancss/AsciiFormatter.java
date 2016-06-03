@@ -62,9 +62,9 @@ public class AsciiFormatter implements Formatter
         _length = spaces + LEN_NR;
         sRetVal.append( Util.multiplyChar( ' ', spaces ) );
         sRetVal.append( "Nr." );
-        for( int nr = 0; nr < header.length; nr++ )
+        for (String h : header)
         {
-            sRetVal.append( ' ' ).append( header[ nr ] );
+            sRetVal.append(' ').append(h);
         }
         sRetVal.append( NL );
 

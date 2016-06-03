@@ -459,9 +459,9 @@ public class JavancssAntTask extends MatchingTask {
             srcListFile.deleteOnExit();
             FileOutputStream fos = new FileOutputStream(srcListFile);
             PrintWriter pw = new PrintWriter(fos);
-            for (int i = 0; i < fileList.size(); i++) {
-                log(fileList.get(i).toString(), 3);
-                pw.println(fileList.get(i).toString());
+            for (File file : fileList) {
+                log(file.toString(), 3);
+                pw.println(file.toString());
             }
             pw.close();
             fos.close();
@@ -502,8 +502,7 @@ public class JavancssAntTask extends MatchingTask {
                 ncssPerPkgMax == Integer.MAX_VALUE &&
                 ncssPerPkgMin == -1)) {
            List<PackageMetric> pkgMetrics = getJavaNcss(fileList).getPackageMetrics();
-            for (int i = 0; i < pkgMetrics.size(); i++) {
-                PackageMetric pkgMetric = pkgMetrics.get(i);
+            for (PackageMetric pkgMetric : pkgMetrics) {
                 failed = packageThresholdExceeded(pkgMetric) || failed;
             }
         }
@@ -562,8 +561,7 @@ public class JavancssAntTask extends MatchingTask {
                 ncssPerClassMax == Integer.MAX_VALUE &&
                 ncssPerClassMin == -1)) {
             List<ObjectMetric> objMetrics = getJavaNcss(fileList).getObjectMetrics();
-            for (int i = 0; i < objMetrics.size(); i++) {
-                ObjectMetric objMetric = objMetrics.get(i);
+            for (ObjectMetric objMetric : objMetrics) {
                 failed = classThresholdExceeded(objMetric) || failed;
             }
         }
@@ -635,8 +633,7 @@ public class JavancssAntTask extends MatchingTask {
                 ncssPerFuncMin == -1)) {
             //call getFunctionMetrics
             List<FunctionMetric> funcMetrics = getJavaNcss(fileList).getFunctionMetrics();
-            for (int i = 0; i < funcMetrics.size(); i++) {
-                FunctionMetric funcMetric = funcMetrics.get(i);
+            for (FunctionMetric funcMetric : funcMetrics) {
                 failed = functionThresholdExceeded(funcMetric) || failed;
             }
         }
