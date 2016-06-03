@@ -55,7 +55,7 @@ public class AsciiFormatter implements Formatter
 
         _nr = 0;
 
-        StringBuffer sRetVal = new StringBuffer();
+        StringBuilder sRetVal = new StringBuilder();
 
         _length = Util.itoa( lines ).length();
         int spaces = Math.max( 0, _length - LEN_NR );
@@ -73,7 +73,7 @@ public class AsciiFormatter implements Formatter
 
     private String _formatListLine( String name, int[] value )
     {
-        StringBuffer sLine = new StringBuffer();
+        StringBuilder sLine = new StringBuilder();
 
         _nr++;
         sLine.append( Util.paddWithSpace( _nr, _length ) );
