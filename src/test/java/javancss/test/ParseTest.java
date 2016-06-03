@@ -62,6 +62,7 @@ public class ParseTest
         _checkParse( 157 ); // Java 7 literals
         _checkParse( 158 ); // JAVANCSS-48
         _checkParse( 159 ); // default interface methods
+        _checkParse( 160 ); // method references
 
         _exitSubTest();
     }
