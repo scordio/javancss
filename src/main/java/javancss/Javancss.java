@@ -39,7 +39,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -140,9 +139,9 @@ public class Javancss
     }
 
     private void _measureSource( File sSourceFile_ )
-        throws IOException, Exception, Error
+        throws Exception, Error
     {
-        Reader reader = null;
+        Reader reader;
 
         // opens the file
         try
@@ -202,7 +201,7 @@ public class Javancss
     }
 
     private void _measureSource( Reader reader )
-        throws IOException, Exception, Error
+        throws Exception, Error
     {
         Util.debug( "_measureSource(Reader).ENTER" );
         // Util.panicIf( _pInit == null );
@@ -234,9 +233,9 @@ public class Javancss
             Map<String, PackageMetric> htNewPackages = _pJavaParser.getPackage();
 
             /* List vNewPackages = new Vector(); */
-            for ( Iterator<Map.Entry<String, PackageMetric>> ePackages = htNewPackages.entrySet().iterator(); ePackages.hasNext(); )
+            for ( Map.Entry<String, PackageMetric> entry : htNewPackages.entrySet() )
             {
-                String sPackage = ePackages.next().getKey();
+                String sPackage = entry.getKey();
 
                 PackageMetric pckmNext = htNewPackages.get( sPackage );
                 pckmNext.name = sPackage;
@@ -299,7 +298,7 @@ public class Javancss
      * the input stream is used.
      */
     private void _measureRoot( Reader reader )
-        throws IOException, Exception, Error
+        throws Exception, Error
     {
         _htPackages = new HashMap<String, PackageMetric>();
 
@@ -451,7 +450,7 @@ public class Javancss
         try
         {
             Util.debug( "Javancss.parseImports().START_PARSING" );
-            if ( Util.isDebug() == false )
+            if ( !Util.isDebug() )
             {
                 _pJavaParser = new JavaParser( reader );
             }
@@ -537,19 +536,18 @@ public class Javancss
             return;
         }
 
-        for ( int i = 0; i < files.length; i++ )
+        for ( File file : files )
         {
-            File newFile = files[i];
-            if ( newFile.isDirectory() )
+            if ( file.isDirectory() )
             {
                 // Recurse!!!
-                _addJavaFiles( newFile, v );
+                _addJavaFiles( file, v );
             }
             else
             {
-                if ( newFile.getName().endsWith( ".java" ) )
+                if ( file.getName().endsWith( ".java" ) )
                 {
-                    v.add( newFile );
+                    v.add( file );
                 }
             }
         }
@@ -630,8 +628,6 @@ public class Javancss
         return newFiles;
     }
 
-    private Init _pInit = null;
-
     /**
      * @deprecated use Javancss(String[]) instead, since the sRcsHeader_ parameter is not useful
      */
@@ -651,7 +647,7 @@ public class Javancss
     public Javancss( String[] asArgs_ )
         throws IOException
     {
-        _pInit = new Init( this, asArgs_, Main.S_RCS_HEADER, S_INIT__FILE_CONTENT );
+        Init _pInit = new Init( this, asArgs_, Main.S_RCS_HEADER, S_INIT__FILE_CONTENT );
         if ( _bExit )
         {
             return;

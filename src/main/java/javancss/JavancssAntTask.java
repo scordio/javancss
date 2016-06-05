@@ -309,7 +309,7 @@ public class JavancssAntTask extends MatchingTask {
         int exitValue = generateReport(fileList);
         if (exitValue == FAILURE) {
             if (abortOnFail) {
-                throw new BuildException("JavaNcss failed", location);
+                throw new BuildException("JavaNcss failed", getLocation());
             } else {
                 log("JavaNcss failed", Project.MSG_ERR);
             }
@@ -384,14 +384,14 @@ public class JavancssAntTask extends MatchingTask {
 
     /**
      * Converts the specified array of filenames into a vector of paths.
-     * @param filesArray an array of filenames.
+     * @param filenames an array of filenames.
      * @return a vector of paths. The path is constructed by prepending this
      * task's source directory to each filename.
      */
-    private List<File> copyFiles(String[] filesArray) {
-        List<File> returnVector = new ArrayList<File>(filesArray.length);
-        for (int i = 0; i < filesArray.length; i++) {
-            returnVector.add(new File(srcdir, filesArray[i]));
+    private List<File> copyFiles(String[] filenames) {
+        List<File> returnVector = new ArrayList<File>(filenames.length);
+        for (String filename : filenames) {
+            returnVector.add(new File(srcdir, filename));
         }
         return returnVector;
     }
@@ -401,7 +401,7 @@ public class JavancssAntTask extends MatchingTask {
      */
     public Path createClasspath() {
         if (classpath == null) {
-            classpath = new Path(project);
+            classpath = new Path(getProject());
         }
         return classpath.createPath();
     }
@@ -466,7 +466,7 @@ public class JavancssAntTask extends MatchingTask {
             pw.close();
             fos.close();
         } catch (IOException e) {
-            throw new BuildException(e, location);
+            throw new BuildException(e, getLocation());
         }
         return srcListFile;
     }
