@@ -185,8 +185,6 @@ public class XmlFormatter
 
     public XmlFormatter( Javancss javancss )
     {
-        super();
-
         _javancss = javancss;
 
         _pNumberFormat = NumberFormat.getInstance( Locale.US );

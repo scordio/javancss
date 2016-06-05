@@ -31,11 +31,6 @@ public class FunctionMetric
 {
     public int ccn = 0;
 
-    public FunctionMetric()
-    {
-        super();
-    }
-
     @Override
     public void clear()
     {

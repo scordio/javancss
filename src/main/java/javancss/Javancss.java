@@ -428,8 +428,6 @@ public class Javancss
      */
     public Javancss()
     {
-        super();
-
         _sErrorMessage = null;
         _thrwError = null;
     }

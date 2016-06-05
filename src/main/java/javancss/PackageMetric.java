@@ -32,11 +32,6 @@ public class PackageMetric
     public int classes = 0;
     public int functions = 0;
 
-    public PackageMetric()
-    {
-        super();
-    }
-
     @Override
     public void clear()
     {

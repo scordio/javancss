@@ -39,11 +39,6 @@ public abstract class Metric
     public int singleLn = 0;
     public int multiLn = 0;
 
-    public Metric()
-    {
-        super();
-    }
-
     public void clear()
     {
         name = ".";

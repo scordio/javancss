@@ -34,11 +34,6 @@ public class ObjectMetric
     public int functions = 0;
     public int classes = 0;
 
-    public ObjectMetric()
-    {
-        super();
-    }
-
     @Override
     public void clear()
     {

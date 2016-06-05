@@ -162,8 +162,6 @@ public class AsciiFormatter implements Formatter
 
     public AsciiFormatter( Javancss javancss )
     {
-        super();
-
         _javancss = javancss;
 
         _pNumberFormat = NumberFormat.getInstance( Locale.US );
