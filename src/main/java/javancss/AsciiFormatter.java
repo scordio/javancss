@@ -206,11 +206,7 @@ public class AsciiFormatter implements Formatter
                "--------- --------- --------- ---------" + NL );
 
         w.write( Util.multiplyChar( ' ', spaces )
-            + Util.paddWithSpace( classesSum, 9 ) + ' '
-            + Util.paddWithSpace( functionsSum, 9 ) + ' '
-            + Util.paddWithSpace( ncssSum, 9 ) + ' '
-            + Util.paddWithSpace( javadocsSum, 9 )
-            + " Total" + NL + NL );
+                + String.format( "%9d %9d %9d %9d Total" + NL + NL, classesSum, functionsSum, ncssSum, javadocsSum ) );
 
         w.write( _formatPackageMatrix( packages
                                          , classesSum
@@ -229,18 +225,13 @@ public class AsciiFormatter implements Formatter
         double fAverageFuncs    = _divide( lFunctionSum, objects );
         double fAverageClasses  = _divide( lClassesSum , objects );
         double fAverageJavadocs = _divide( lJVDCSum    , objects );
-        String sRetVal = "Average Object NCSS:             "
-            + Util.paddWithSpace( _pNumberFormat.format( fAverageNcss ),     9 ) + NL
-            + "Average Object Functions:        "
-            + Util.paddWithSpace( _pNumberFormat.format( fAverageFuncs ),    9 ) + NL
-            + "Average Object Inner Classes:    "
-            + Util.paddWithSpace( _pNumberFormat.format( fAverageClasses ),  9 ) + NL
-            + "Average Object Javadoc Comments: "
-            + Util.paddWithSpace( _pNumberFormat.format( fAverageJavadocs ), 9 ) + NL
-            + "Program NCSS:                    "
-            + Util.paddWithSpace( _pNumberFormat.format( _javancss.getNcss() ), 9 ) + NL;
-
-        return sRetVal;
+        return String.format( Locale.US,
+                  "Average Object NCSS:             %9.2f" + NL
+                + "Average Object Functions:        %9.2f" + NL
+                + "Average Object Inner Classes:    %9.2f" + NL
+                + "Average Object Javadoc Comments: %9.2f" + NL
+                + "Program NCSS:                    %,9.2f" + NL,
+                fAverageNcss, fAverageFuncs, fAverageClasses, fAverageJavadocs, (double) _javancss.getNcss() );
     }
 
     public void printObjectNcss( Writer w )
@@ -292,16 +283,12 @@ public class AsciiFormatter implements Formatter
         double fAverageCCN  = _divide( lCCNSum     , functions );
         double fAverageJVDC = _divide( lJVDCSum    , functions );
 
-        String sRetVal = "Average Function NCSS: "
-            + Util.paddWithSpace( _pNumberFormat.format( fAverageNcss ), 10 ) + NL
-            + "Average Function CCN:  "
-            + Util.paddWithSpace( _pNumberFormat.format( fAverageCCN ),  10 ) + NL
-            + "Average Function JVDC: "
-            + Util.paddWithSpace( _pNumberFormat.format( fAverageJVDC ), 10 ) + NL
-            + "Program NCSS:          "
-            + Util.paddWithSpace( _pNumberFormat.format( _javancss.getNcss() ), 10 ) + NL;
-
-        return sRetVal;
+        return String.format( Locale.US,
+                  "Average Function NCSS: %10.2f" + NL 
+                + "Average Function CCN:  %10.2f" + NL
+                + "Average Function JVDC: %10.2f" + NL
+                + "Program NCSS:          %,10.2f" + NL,
+                fAverageNcss, fAverageCCN, fAverageJVDC, (double) _javancss.getNcss() );
     }
 
     public void printFunctionNcss( Writer w )
