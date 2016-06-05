@@ -24,11 +24,9 @@ import java.io.IOException;
 import java.io.Writer;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-
-import ccl.util.Util;
 
 /**
  * Generates XML output of Java metrics.
@@ -468,12 +466,10 @@ public class XmlFormatter
     public void printStart( Writer w )
         throws IOException
     {
-        Calendar calendar = Util.getCalendar();
-
-        w.write( "<?xml version=\"1.0\"?>\n"
-                        + "<javancss>\n"
-                        + "  <date>" + Util.getDate( calendar ) + "</date>\n"
-                        + "  <time>" + Util.getTime( calendar ) + "</time>\n" );
+        w.write( "<?xml version=\"1.0\"?>\n" );
+        w.write( "<javancss>\n" );
+        w.write( String.format( "  <date>%tF</date>\n", new Date() ) );
+        w.write( String.format( "  <time>%tT</time>\n", new Date() ) );
     }
 
     public void printEnd( Writer w )

@@ -27,8 +27,6 @@ import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
 
-import ccl.util.Util;
-
 /**
  * Generates ascii output of Java metrics.
  *
@@ -57,10 +55,10 @@ public class AsciiFormatter implements Formatter
 
         StringBuilder sRetVal = new StringBuilder();
 
-        _length = Util.itoa( lines ).length();
+        _length = String.valueOf( lines ).length();
         int spaces = Math.max( 0, _length - LEN_NR );
         _length = spaces + LEN_NR;
-        sRetVal.append( Util.multiplyChar( ' ', spaces ) );
+        sRetVal.append( multiplyChar( ' ', spaces ) );
         sRetVal.append( "Nr." );
         for (String h : header)
         {
@@ -76,12 +74,11 @@ public class AsciiFormatter implements Formatter
         StringBuilder sLine = new StringBuilder();
 
         _nr++;
-        sLine.append( Util.paddWithSpace( _nr, _length ) );
+        sLine.append( pad( String.valueOf( _nr ), _length ) );
         for( int index = 0; index < _header.length - 1; index++ )
         {
             sLine.append( ' ' );
-            sLine.append( Util.paddWithSpace( value[ index ]
-                                              , _header[ index ].length() ) );
+            sLine.append( pad( String.valueOf( value[index] ), _header[index].length() ) );
         }
         sLine.append( ' ' );
         sLine.append( name );
@@ -122,37 +119,37 @@ public class AsciiFormatter implements Formatter
         int maxItemLength = _pNumberFormat.format( ncssSum ).length();
         maxItemLength = Math.max( 9, maxItemLength );
         String sRetVal =
-            Util.paddWithSpace( "Packages" , maxItemLength ) + ' '
-            + Util.paddWithSpace( "Classes", maxItemLength ) + ' '
-            + Util.paddWithSpace( "Functions", maxItemLength ) + ' '
-            + Util.paddWithSpace( "NCSS", maxItemLength ) + ' '
-            + Util.paddWithSpace( "Javadocs", maxItemLength )
+            pad("Packages", maxItemLength) + ' '
+            + pad("Classes", maxItemLength) + ' '
+            + pad("Functions", maxItemLength) + ' '
+            + pad("NCSS", maxItemLength) + ' '
+            + pad("Javadocs", maxItemLength)
             + " | per" + NL
 
-            + Util.multiplyChar( '-', ( maxItemLength + 1 ) * 6 + 1 ) + NL
-            + Util.paddWithSpace( _pNumberFormat.format( packages ), maxItemLength ) + ' '
-            + Util.paddWithSpace( _pNumberFormat.format( classesSum ), maxItemLength ) + ' '
-            + Util.paddWithSpace( _pNumberFormat.format( functionsSum ), maxItemLength ) + ' '
-            + Util.paddWithSpace( _pNumberFormat.format( ncssSum ), maxItemLength ) + ' '
-            + Util.paddWithSpace( _pNumberFormat.format( javadocsSum ), maxItemLength )
+            + multiplyChar( '-', ( maxItemLength + 1 ) * 6 + 1 ) + NL
+            + pad( _pNumberFormat.format( packages ), maxItemLength ) + ' '
+            + pad( _pNumberFormat.format( classesSum ), maxItemLength ) + ' '
+            + pad( _pNumberFormat.format( functionsSum ), maxItemLength ) + ' '
+            + pad( _pNumberFormat.format( ncssSum ), maxItemLength ) + ' '
+            + pad( _pNumberFormat.format( javadocsSum ), maxItemLength )
             + " | Project" + NL
 
-            + Util.multiplyChar( ' ', maxItemLength + 1 )
-            + Util.paddWithSpace( _pNumberFormat.format( _divide( classesSum, packages ) ), maxItemLength ) + ' '
-            + Util.paddWithSpace( _pNumberFormat.format( _divide( functionsSum, packages ) ), maxItemLength ) + ' '
-            + Util.paddWithSpace( _pNumberFormat.format( _divide( ncssSum, packages ) ), maxItemLength ) + ' '
-            + Util.paddWithSpace( _pNumberFormat.format( _divide( javadocsSum, packages ) ), maxItemLength )
+            + multiplyChar( ' ', maxItemLength + 1 )
+            + pad( _pNumberFormat.format( _divide( classesSum, packages ) ), maxItemLength ) + ' '
+            + pad( _pNumberFormat.format( _divide( functionsSum, packages ) ), maxItemLength ) + ' '
+            + pad( _pNumberFormat.format( _divide( ncssSum, packages ) ), maxItemLength ) + ' '
+            + pad( _pNumberFormat.format( _divide( javadocsSum, packages ) ), maxItemLength )
             + " | Package" + NL
 
-            + Util.multiplyChar( ' ', (maxItemLength + 1)*2 )
-            + Util.paddWithSpace( _pNumberFormat.format( _divide( functionsSum, classesSum ) ), maxItemLength ) + ' '
-            + Util.paddWithSpace( _pNumberFormat.format( _divide( ncssSum, classesSum ) ), maxItemLength ) + ' '
-            + Util.paddWithSpace( _pNumberFormat.format( _divide( javadocsSum, classesSum ) ), maxItemLength )
+            + multiplyChar( ' ', (maxItemLength + 1)*2 )
+            + pad( _pNumberFormat.format( _divide( functionsSum, classesSum ) ), maxItemLength ) + ' '
+            + pad( _pNumberFormat.format( _divide( ncssSum, classesSum ) ), maxItemLength ) + ' '
+            + pad( _pNumberFormat.format( _divide( javadocsSum, classesSum ) ), maxItemLength )
             + " | Class" + NL
 
-            + Util.multiplyChar( ' ', (maxItemLength + 1)*3 )
-            + Util.paddWithSpace( _pNumberFormat.format( _divide( ncssSum, functionsSum ) ), maxItemLength ) + ' '
-            + Util.paddWithSpace( _pNumberFormat.format( _divide( javadocsSum, functionsSum ) ), maxItemLength )
+            + multiplyChar( ' ', (maxItemLength + 1)*3 )
+            + pad( _pNumberFormat.format( _divide( ncssSum, functionsSum ) ), maxItemLength ) + ' '
+            + pad( _pNumberFormat.format( _divide( javadocsSum, functionsSum ) ), maxItemLength )
             + " | Function" + NL;
 
         ((DecimalFormat)_pNumberFormat).applyPattern( "#,##0.00" );
@@ -200,12 +197,12 @@ public class AsciiFormatter implements Formatter
                                         } ) );
         }
 
-        int packagesLength = Util.itoa( packages ).length();
+        int packagesLength = String.valueOf( packages ).length();
         int spaces = Math.max( packagesLength, LEN_NR ) + 1;
-        w.write( Util.multiplyChar( ' ', spaces ) +
+        w.write( multiplyChar( ' ', spaces ) +
                "--------- --------- --------- ---------" + NL );
 
-        w.write( Util.multiplyChar( ' ', spaces )
+        w.write( multiplyChar( ' ', spaces )
                 + String.format( "%9d %9d %9d %9d Total" + NL + NL, classesSum, functionsSum, ncssSum, javadocsSum ) );
 
         w.write( _formatPackageMatrix( packages
@@ -339,5 +336,31 @@ public class AsciiFormatter implements Formatter
 
     public void printEnd( Writer w )
     {
+    }
+
+    private String multiplyChar( char c, int count )
+    {
+        String s;
+        for ( s = ""; count > 0; --count )
+        {
+            s = s + c;
+        }
+
+        return s;
+    }
+
+    private String pad( String s, int count )
+    {
+        String sRetVal = s;
+        if ( sRetVal.length() >= count )
+        {
+            return sRetVal;
+        }
+        else
+        {
+            String sPadding = multiplyChar( ' ', count - sRetVal.length() );
+            sRetVal = sPadding + sRetVal;
+            return sRetVal;
+        }
     }
 }
