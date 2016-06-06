@@ -31,7 +31,6 @@ import javax.swing.border.*;
 
 import ccl.swing.AboutDialog;
 import ccl.swing.AnimationPanel;
-import ccl.swing.AutoGridBagLayout;
 import ccl.swing.MainJFrame;
 import ccl.swing.SwingUtil;
 import ccl.util.FileUtil;
@@ -164,9 +163,9 @@ public class JavancssFrame extends MainJFrame {
 
         _bAboutSelected = false;
 
-        AutoGridBagLayout pAutoGridBagLayout = new AutoGridBagLayout();
+        GridBagLayout layout = new GridBagLayout();
 
-        getContentPane().setLayout(pAutoGridBagLayout);
+        getContentPane().setLayout(layout);
 
         Image pImage = Toolkit.getDefaultToolkit().
                getImage( SwingUtil.createCCLBorder().getClass().getResource
