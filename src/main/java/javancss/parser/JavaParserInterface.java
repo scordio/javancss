@@ -1,6 +1,7 @@
 package javancss.parser;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 
 import javancss.FunctionMetric;
 import javancss.ObjectMetric;
@@ -8,41 +9,39 @@ import javancss.PackageMetric;
 
 public interface JavaParserInterface
 {
-    public void parse()
-        throws Exception;
+    void parse() throws Exception;
 
-    public void parseImportUnit()
-        throws Exception;
+    void parseImportUnit() throws Exception;
 
-    public int getNcss();
+    int getNcss();
 
-    public int getLOC();
+    int getLOC();
 
     // added by SMS
-    public int getJvdc();
+    int getJvdc();
 
     /*public int getTopLevelClasses() {
       return _topLevelClasses;
       }*/
 
-    public List<FunctionMetric> getFunction();
+    List<FunctionMetric> getFunction();
 
     /**
      * @return Top level classes in sorted order
      */
-    public List<ObjectMetric> getObject();
+    List<ObjectMetric> getObject();
 
     /**
      * @return The empty package consists of the name ".".
      */
-    public Map<String, PackageMetric> getPackage();
+    Map<String, PackageMetric> getPackage();
 
-    public List<Object[]> getImports();
+    List<Object[]> getImports();
 
     /**
      * name, beginLine, ...
      */
-    public Object[] getPackageObjects();
+    Object[] getPackageObjects();
 
     /**
      * if javancss is used with cat *.java a long
@@ -50,5 +49,5 @@ public interface JavaParserInterface
      * number information in case of an parse exception
      * is not very useful.
      */
-    public String getLastFunction();
+    String getLastFunction();
 }
