@@ -26,12 +26,12 @@ import java.util.*;
 import java.text.*;
 import java.io.*;
 
+import javax.help.*;
 import javax.swing.*;
 import javax.swing.border.*;
 
 import ccl.swing.AboutDialog;
 import ccl.swing.AnimationPanel;
-import ccl.swing.MainJFrame;
 import ccl.swing.SwingUtil;
 import ccl.util.FileUtil;
 import ccl.util.Init;
@@ -45,12 +45,10 @@ import ccl.util.Util;
  * @author  <a href="http://www.kclee.de/clemens/">Chr. Clemens Lee</a> (<a href="mailto:clemens@kclee.com"><i>clemens@kclee.com</i></a>)
  * @version $Id$
  */
-public class JavancssFrame extends MainJFrame {
+public class JavancssFrame extends JFrame {
     public static final String S_PACKAGES = "Packages";
     public static final String S_CLASSES = "Classes";
     public static final String S_METHODS = "Methods";
-
-    private static final String S_MN_F_SAVE = "Save";
 
     private int _oldThreadPriority = -1;
 
@@ -70,9 +68,6 @@ public class JavancssFrame extends MainJFrame {
     private String _sProjectName = null;
     private String _sProjectPath = null;
 
-    private Init _pInit = null;
-
-    @Override
     public void save() {
         String sFullProjectName = FileUtil.concatPath
                (_sProjectPath, _sProjectName.toLowerCase());
@@ -115,42 +110,13 @@ public class JavancssFrame extends MainJFrame {
         SwingUtil.showMessage(this, sSuccessMessage);
     }
 
-    private void _setMenuBar() {
-        Vector<Vector<String>> vMenus = new Vector<Vector<String>>();
-
-        Vector<String> vFileMenu = new Vector<String>();
-        Vector<String> vHelpMenu = new Vector<String>();
-
-        vFileMenu.addElement("File");
-        vFileMenu.addElement(S_MN_F_SAVE);
-        vFileMenu.addElement("Exit");
-
-        vHelpMenu.addElement("Help");
-        vHelpMenu.addElement("&Contents...");
-        vHelpMenu.addElement("---");
-        vHelpMenu.addElement("About...");
-
-        vMenus.addElement(vFileMenu);
-        vMenus.addElement(vHelpMenu);
-
-        setMenuBar(vMenus);
-    }
-
-    /**
-     * Returns init object provided with constructor.
-     */
-    @Override
-    public Init getInit() {
-        return _pInit;
-    }
-
     public JavancssFrame(Init pInit_) {
         super( "JavaNCSS: " + pInit_.getFileName() );
 
-        _pInit = pInit_;
-        getInit().setAuthor( "Chr. Clemens Lee" );
+        super.setBackground( pInit_.getBackground() );
 
-        super.setBackground( _pInit.getBackground() );
+        setDefaultCloseOperation( DISPOSE_ON_CLOSE );
+        setIconImage( new ImageIcon( getClass().getClassLoader().getResource( "javancss/javancssframe.gif" ) ).getImage() );
 
         _sProjectName = pInit_.getFileName();
         _sProjectPath = pInit_.getFilePath();
@@ -159,9 +125,7 @@ public class JavancssFrame extends MainJFrame {
             _sProjectPath = pInit_.getApplicationPath();
         }
 
-        _setMenuBar();
-
-        _bAboutSelected = false;
+        createMenuBar();
 
         GridBagLayout layout = new GridBagLayout();
 
@@ -184,9 +148,79 @@ public class JavancssFrame extends MainJFrame {
         SwingUtil.centerComponent(this);
     }
 
+    private void createMenuBar()
+    {
+        JMenuBar menubar = new JMenuBar();
+        menubar.add( createFileMenu() );
+        menubar.add( createHelpMenu() );
+
+        setJMenuBar( menubar );
+    }
+
+    private JMenu createFileMenu()
+    {
+        JMenu menu = new JMenu( "File" );
+
+        JMenuItem item = new JMenuItem( "Save" );
+        item.setAccelerator( KeyStroke.getKeyStroke( 'S', InputEvent.CTRL_MASK ) );
+        item.addActionListener( new ActionListener()
+        {
+            public void actionPerformed( ActionEvent event )
+            {
+                save();
+            }
+        } );
+        menu.add( item );
+
+        item = new JMenuItem( "Exit" );
+        item.addActionListener( new ActionListener()
+        {
+            public void actionPerformed( ActionEvent event )
+            {
+                dispose();
+            }
+        } );
+
+        menu.add( item );
+
+        return menu;
+    }
+
+    private JMenu createHelpMenu()
+    {
+        JMenu menu = new JMenu( "Help" );
+
+        JMenuItem item = new JMenuItem( "Contents..." , 'C');
+        try
+        {
+            HelpBroker broker = new HelpSet( null, getClass().getClassLoader().getResource( "javancss/javancss.hs" ) ).createHelpBroker();
+            item.addActionListener( new CSH.DisplayHelpFromSource( broker ) );
+        }
+        catch ( HelpSetException e )
+        {
+            e.printStackTrace();
+        }
+        
+        menu.add( item );
+        menu.addSeparator();
+        
+        item = new JMenuItem( "About..." );
+        item.addActionListener( new ActionListener()
+        {
+            public void actionPerformed( ActionEvent e )
+            {
+                AboutDialog dlgAbout = new AboutDialog( JavancssFrame.this, "Chr. Clemens Lee", javancss.Main.S_RCS_HEADER );
+                dlgAbout.dispose();
+                requestFocus();
+            }
+        } );
+        
+        menu.add( item );
+        
+        return menu;
+    }
+
     public void showJavancss(Javancss pJavancss_) throws IOException {
-        _bStop = false;
-        _bSave = false;
         if (_oldThreadPriority != -1) {
             Thread.currentThread().setPriority(_oldThreadPriority);
             _pAnimationPanel.stop();
@@ -282,41 +316,6 @@ public class JavancssFrame extends MainJFrame {
         repaint();
     }
 
-    private boolean _bStop = false;
-    private boolean _bSave = false;
-
-    @Override
-    public void run() {
-        _bSave = false;
-        while(!_bStop) {
-            if (_bSave) {
-                save();
-                _bSave = false;
-            }
-
-            if (isExitSet()) {
-                exit();
-                _bStop = true;
-                break;
-            }
-
-            if (_bAboutSelected) {
-                _bAboutSelected = false;
-                AboutDialog dlgAbout = new AboutDialog
-                    ( this,
-                      getInit().getAuthor(),
-                      javancss.Main.S_RCS_HEADER );
-                dlgAbout.dispose();
-                requestFocus();
-            }
-
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-            }
-        }
-    }
-
     @Override
     public void setVisible(boolean bVisible_) {
         if (bVisible_) {
@@ -345,47 +344,6 @@ public class JavancssFrame extends MainJFrame {
         } else {
             /*_pTabbedPane.setSelectedComponent(_txtPackage);*/
             _pTabbedPane.setSelectedIndex(0);
-        }
-    }
-
-    private boolean _bAboutSelected = false;
-
-    @Override
-    public void actionPerformed(ActionEvent pActionEvent_) {
-        Util.debug("JavancssFrame.actionPerformed(..).1");
-        Object oSource = pActionEvent_.getSource();
-        if (oSource instanceof JMenuItem) {
-            String sMenuItem = ((JMenuItem)oSource).getText();
-            if (sMenuItem.equals("Beenden") || sMenuItem.equals("Exit")) {
-                processWindowEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
-            } else if (sMenuItem.equals(S_MN_F_SAVE)) {
-                _bSave = true;
-            } else if (sMenuItem.equals("Info...") || sMenuItem.equals("About...") ||
-                       sMenuItem.equals("Info") || sMenuItem.equals("About"))
-            {
-                _bAboutSelected = true;
-            } else if (sMenuItem.equals("Inhalt...") || sMenuItem.equals("Contents...") ||
-                       sMenuItem.equals("Inhalt") || sMenuItem.equals("Contents"))
-            {
-                String sStartURL = FileUtil.concatPath(FileUtil.getPackagePath("javancss"),
-                                                       S_DOC_DIR) + File.separator +
-                       "index.html";
-                if (Util.isEmpty(sStartURL)) {
-                    return;
-                }
-                sStartURL = sStartURL.replace('\\', '/');
-                if (sStartURL.charAt(0) != '/') {
-                    sStartURL = "/" + sStartURL;
-                }
-                sStartURL = "file:" + sStartURL;
-                Util.debug("JavancssFrame.actionPerformed(): sStartURL: " + sStartURL);
-                /*try {
-                    URL urlHelpDocument = new URL(sStartURL);
-                    //HtmlViewer pHtmlViewer = new HtmlViewer(urlHelpDocument);
-                } catch(Exception pException) {
-                    Util.debug("JavancssFrame.actionPerformed(..).pException: " + pException);
-                }*/
-            }
         }
     }
 }

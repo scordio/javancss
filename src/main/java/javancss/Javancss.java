@@ -688,7 +688,6 @@ public class Javancss
 
             pJavancssFrame.showJavancss( this );
             pJavancssFrame.setSelectedTab( JavancssFrame.S_PACKAGES );
-            pJavancssFrame.run();
 
             return;
         }
