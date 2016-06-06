@@ -32,7 +32,6 @@ import javax.swing.border.*;
 
 import ccl.swing.AboutDialog;
 import ccl.swing.AnimationPanel;
-import ccl.swing.SwingUtil;
 import ccl.util.FileUtil;
 import ccl.util.Init;
 import ccl.util.Util;
@@ -81,33 +80,27 @@ public class JavancssFrame extends JFrame {
         String sSuccessMessage = "Data appended successfully to the following files:";
 
         try {
-            FileUtil.appendFile(sPackagesFullFileName,
-                                _txtPackage.getText());
+            FileUtil.appendFile(sPackagesFullFileName, _txtPackage.getText());
             sSuccessMessage += "\n" + sPackagesFullFileName;
-        } catch(Exception ePackages) {
-            SwingUtil.showMessage(this, "Error: could not append to file '" +
-                                sPackagesFullFileName + "'.\n" + ePackages);
+        } catch(Exception e) {
+            JOptionPane.showMessageDialog( this, "Could not append to file '" + sClassesFullFileName + "'.\n" + e, "Error", JOptionPane.ERROR_MESSAGE );
         }
 
         try {
-            FileUtil.appendFile(sClassesFullFileName,
-                                _txtObject.getText());
+            FileUtil.appendFile(sClassesFullFileName, _txtObject.getText());
                         sSuccessMessage += "\n" + sClassesFullFileName;
-        } catch(Exception eClasses) {
-            SwingUtil.showMessage(this, "Error: could not append to file '" +
-                                sClassesFullFileName + "'.\n" + eClasses);
+        } catch(Exception e) {
+            JOptionPane.showMessageDialog( this, "Could not append to file '" + sClassesFullFileName + "'.\n" + e, "Error", JOptionPane.ERROR_MESSAGE );
         }
 
         try {
-            FileUtil.appendFile(sMethodsFullFileName,
-                                _txtFunction.getText());
+            FileUtil.appendFile(sMethodsFullFileName, _txtFunction.getText());
             sSuccessMessage += "\n" + sMethodsFullFileName;
-        } catch(Exception eMethods) {
-            SwingUtil.showMessage(this, "Error: could not append to file '" +
-                                sMethodsFullFileName + "'.\n" + eMethods);
+        } catch(Exception e) {
+            JOptionPane.showMessageDialog( this, "Could not append to file '" + sMethodsFullFileName + "'.\n" + e, "Error", JOptionPane.ERROR_MESSAGE );
         }
 
-        SwingUtil.showMessage(this, sSuccessMessage);
+        JOptionPane.showMessageDialog( this, sSuccessMessage, "Message", JOptionPane.INFORMATION_MESSAGE );
     }
 
     public JavancssFrame(Init pInit_) {
@@ -131,10 +124,8 @@ public class JavancssFrame extends JFrame {
 
         getContentPane().setLayout(layout);
 
-        Image pImage = Toolkit.getDefaultToolkit().
-               getImage( SwingUtil.createCCLBorder().getClass().getResource
-                         ( "anim_recycle_brown.gif" ) );
-        _pAnimationPanel = new AnimationPanel( pImage, 350 );
+        Image image = Toolkit.getDefaultToolkit().getImage( AnimationPanel.class.getResource( "anim_recycle_brown.gif" ) );
+        _pAnimationPanel = new AnimationPanel( image, 350 );
 
         JPanel pPanel = new JPanel();
         pPanel.setBorder(new SoftBevelBorder(BevelBorder.LOWERED));
@@ -145,7 +136,10 @@ public class JavancssFrame extends JFrame {
 
         pack();
         setSize(640, 480);
-        SwingUtil.centerComponent(this);
+        
+        // center the frame on the screen
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        setLocation( ( screenSize.width - getWidth() ) / 2, ( screenSize.height - getHeight() ) / 2 );
     }
 
     private void createMenuBar()
