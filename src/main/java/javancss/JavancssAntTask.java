@@ -27,9 +27,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-import ccl.util.Util;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
@@ -337,8 +337,7 @@ public class JavancssAntTask extends MatchingTask {
             log("Report to be sent to standard output", Project.MSG_VERBOSE);
         }
         String[] javancssArguments = getCommandLineArguments(fileList);
-        log("Executing: javancss " + Util.objectsToVector(javancssArguments)
-            , Project.MSG_VERBOSE);
+        log("Executing: javancss " + Arrays.toString( javancssArguments ), Project.MSG_VERBOSE);
 
         try {
             Javancss javancss = new Javancss(javancssArguments);
