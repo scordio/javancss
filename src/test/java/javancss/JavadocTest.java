@@ -19,20 +19,14 @@ along with JavaNCSS; see the file COPYING.  If not, write to
 the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA 02111-1307, USA.  */
 
-package javancss.test;
+package javancss;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import ccl.util.Test;
-
-import javancss.Javancss;
-import javancss.ObjectMetric;
-import javancss.PackageMetric;
-
-public class JavadocTest extends AbstractTest {
-
+public class JavadocTest extends AbstractTestCase
+{
    /**
     * There has been a bug introduced for version 16.34 which
     * counts Javadoc comments (**) for fields as well as for
@@ -43,19 +37,15 @@ public class JavadocTest extends AbstractTest {
     */
    public void testJavadocs()
    {
-       _enterSubTest( "javadocs" );
-
-       _checkJvdcs( 20, 7 );
-       _checkJvdcs( 46, 3 );
-       _checkJvdcs( 47, 2 );
-       _checkJvdcs( 68, 2 );
-       _checkJvdcs( 121, 2 );
-       _checkJvdcs( 122, 1 );
-       _checkJvdcs( 139 , 3 ); // JAVANCSS-20
-       _checkJvdcs( 140 , 2 ); // JAVANCSS-20
-       _checkJvdcs( 141 , 1 ); // JAVANCSS-20
-
-       _exitSubTest();
+       checkJvdcs( 20, 7 );
+       checkJvdcs( 46, 3 );
+       checkJvdcs( 47, 2 );
+       checkJvdcs( 68, 2 );
+       checkJvdcs( 121, 2 );
+       checkJvdcs( 122, 1 );
+       checkJvdcs( 139, 3 ); // JAVANCSS-20
+       checkJvdcs( 140, 2 ); // JAVANCSS-20
+       checkJvdcs( 141, 1 ); // JAVANCSS-20
    }
 
    /**
@@ -70,31 +60,27 @@ public class JavadocTest extends AbstractTest {
     */
    public void testJavadocLines()
    {
-       _enterSubTest( "javadoc lines" );
-
-       _checkJavadocLines( 28, "jacob", 0 );
+       checkJavadocLines( 28, "jacob", 0 );
 
        //
        // same test with more files
        //
-       _checkJavadocLines( new int[] { 20, 21, 28 }, "jacob", 0 );
+       checkJavadocLines( new int[]{ 20, 21, 28 }, "jacob", 0 );
 
-       _checkJavadocLines( 68, ".", 6 );
-       _checkJavadocLines( 69, ".", 4 );
-       _checkJavadocLines( new int[] { 68, 69 }, ".", 10 );
-       _checkJavadocLines( 65, "idebughc.testsuite", 14 );
-
-       _exitSubTest();
+       checkJavadocLines( 68, ".", 6 );
+       checkJavadocLines( 69, ".", 4 );
+       checkJavadocLines( new int[]{ 68, 69 }, ".", 10 );
+       checkJavadocLines( 65, "idebughc.testsuite", 14 );
    }
 
-   private void _checkJavadocLines( int testFile, String sPackage, int javadocLines )
+   private void checkJavadocLines( int testFile, String sPackage, int javadocLines )
    {
        Javancss pJavancss = measureTestFile( testFile );
 
-       _checkJavadocLines( pJavancss, sPackage, javadocLines );
+       checkJavadocLines( pJavancss, sPackage, javadocLines );
    }
 
-   private void _checkJavadocLines( int[] aTestFile, String sPackage, int javadocLines )
+   private void checkJavadocLines( int[] aTestFile, String sPackage, int javadocLines )
    {
        List<File> files = new ArrayList<File>();
        for( int next : aTestFile )
@@ -103,13 +89,13 @@ public class JavadocTest extends AbstractTest {
        }
 
        Javancss pJavancss = new Javancss( files );
-       _checkJavadocLines( pJavancss, sPackage, javadocLines );
+       checkJavadocLines( pJavancss, sPackage, javadocLines );
    }
 
-   private void _checkJavadocLines( Javancss pJavancss, String sPackage, int javadocLines )
+   private void checkJavadocLines( Javancss pJavancss, String sPackage, int javadocLines )
    {
        List<PackageMetric> vPackageMetrics = pJavancss.getPackageMetrics();
-       Assert( vPackageMetrics.size() >= 1 );
+       assertTrue( vPackageMetrics.size() >= 1 );
        PackageMetric pmPackage = null;
        for ( PackageMetric pmNext : vPackageMetrics )
        {
@@ -118,45 +104,19 @@ public class JavadocTest extends AbstractTest {
                pmPackage = pmNext;
            }
        }
-       Assert( pmPackage != null );
-       Assert( pmPackage.javadocsLn == javadocLines
-               , "pmJacob.javadocsLn: " + pmPackage + ": " + pmPackage.javadocsLn );
+       assertNotNull( pmPackage );
+       assertEquals( "pmJacob.javadocsLn: " + pmPackage + ": " + pmPackage.javadocsLn,
+               javadocLines, pmPackage.javadocsLn );
    }
 
-   private void _checkJvdcs( int testFileNumber, int expectedJvdcsResult )
+   private void checkJvdcs( int testFileNumber, int expectedJvdcsResult )
    {
-       Javancss pJavancss = measureTestFile( testFileNumber );
-       List<ObjectMetric> vObjectMetrics = pJavancss.getObjectMetrics();
+       Javancss javancss = measureTestFile( testFileNumber );
+       List<ObjectMetric> vObjectMetrics = javancss.getObjectMetrics();
        ObjectMetric classMetric = vObjectMetrics.get( 0 );
        int jvdcs = classMetric.javadocs;
-       /* int jvdc = pJavancss.getJvdc(); */
-       bugIf( jvdcs != expectedJvdcsResult, "Parsing file Test" + testFileNumber + ".java failed. Jvdc is " + jvdcs
-                       + " and not " + expectedJvdcsResult + "." );
+       /* int jvdc = javancss.getJvdc(); */
+       assertEquals( "Parsing file Test" + testFileNumber + ".java failed. Jvdc is " + jvdcs + " and not " + expectedJvdcsResult + ".",
+               expectedJvdcsResult, jvdcs );
    }
-
-   public JavadocTest()
-   {
-       super();
-   }
-
-   public JavadocTest( Test pTest_ )
-   {
-       super( pTest_ );
-   }
-
-   /**
-    * Test code goes here.
-    */
-   @Override
-   protected void _doIt()
-   {
-       testJavadocLines();
-       testJavadocs();
-   }
-   
-   public static void main( String[] asArg_ )
-   {
-       new JavadocTest().main();
-    }
-
 }
