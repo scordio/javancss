@@ -32,9 +32,7 @@ import javax.swing.border.*;
 
 import ccl.swing.AboutDialog;
 import ccl.swing.AnimationPanel;
-import ccl.util.FileUtil;
 import ccl.util.Init;
-import ccl.util.Util;
 
 /**
  * Main class used to start JavaNCSS in GUI mode from other
@@ -68,39 +66,42 @@ public class JavancssFrame extends JFrame {
     private String _sProjectPath = null;
 
     public void save() {
-        String sFullProjectName = FileUtil.concatPath
-               (_sProjectPath, _sProjectName.toLowerCase());
-        String sPackagesFullFileName = sFullProjectName +
-               ".packages.txt";
-        String sClassesFullFileName = sFullProjectName +
-               ".classes.txt";
-        String sMethodsFullFileName = sFullProjectName +
-               ".methods.txt";
+        File targetDirectory = new File(_sProjectPath);
+        File packagesFile = new File( targetDirectory, _sProjectName.toLowerCase() + ".packages.txt" );
+        File classesFile  = new File( targetDirectory, _sProjectName.toLowerCase() + ".classes.txt" );
+        File methodsFile  = new File( targetDirectory, _sProjectName.toLowerCase() + ".methods.txt" );
 
         String sSuccessMessage = "Data appended successfully to the following files:";
 
         try {
-            FileUtil.appendFile(sPackagesFullFileName, _txtPackage.getText());
-            sSuccessMessage += "\n" + sPackagesFullFileName;
+            appendFile( packagesFile, _txtPackage.getText() );
+            sSuccessMessage += "\n" + packagesFile;
         } catch(Exception e) {
-            JOptionPane.showMessageDialog( this, "Could not append to file '" + sClassesFullFileName + "'.\n" + e, "Error", JOptionPane.ERROR_MESSAGE );
+            JOptionPane.showMessageDialog( this, "Could not append to file '" + classesFile + "'.\n" + e, "Error", JOptionPane.ERROR_MESSAGE );
         }
 
         try {
-            FileUtil.appendFile(sClassesFullFileName, _txtObject.getText());
-                        sSuccessMessage += "\n" + sClassesFullFileName;
+            appendFile( classesFile, _txtObject.getText() );
+            sSuccessMessage += "\n" + classesFile;
         } catch(Exception e) {
-            JOptionPane.showMessageDialog( this, "Could not append to file '" + sClassesFullFileName + "'.\n" + e, "Error", JOptionPane.ERROR_MESSAGE );
+            JOptionPane.showMessageDialog( this, "Could not append to file '" + classesFile + "'.\n" + e, "Error", JOptionPane.ERROR_MESSAGE );
         }
 
         try {
-            FileUtil.appendFile(sMethodsFullFileName, _txtFunction.getText());
-            sSuccessMessage += "\n" + sMethodsFullFileName;
+            appendFile( methodsFile, _txtFunction.getText() );
+            sSuccessMessage += "\n" + methodsFile;
         } catch(Exception e) {
-            JOptionPane.showMessageDialog( this, "Could not append to file '" + sMethodsFullFileName + "'.\n" + e, "Error", JOptionPane.ERROR_MESSAGE );
+            JOptionPane.showMessageDialog( this, "Could not append to file '" + methodsFile + "'.\n" + e, "Error", JOptionPane.ERROR_MESSAGE );
         }
 
         JOptionPane.showMessageDialog( this, sSuccessMessage, "Message", JOptionPane.INFORMATION_MESSAGE );
+    }
+
+    public static void appendFile( File file, String content ) throws IOException
+    {
+        FileWriter writer = new FileWriter( file, true );
+        writer.write( content );
+        writer.close();
     }
 
     public JavancssFrame(Init pInit_) {
@@ -113,7 +114,8 @@ public class JavancssFrame extends JFrame {
 
         _sProjectName = pInit_.getFileName();
         _sProjectPath = pInit_.getFilePath();
-        if (Util.isEmpty(_sProjectName)) {
+        if ( _sProjectName == null || _sProjectName.trim().length() == 0 )
+        {
             _sProjectName = pInit_.getApplicationName();
             _sProjectPath = pInit_.getApplicationPath();
         }
@@ -231,7 +233,6 @@ public class JavancssFrame extends JFrame {
             JScrollPane jspError = new JScrollPane(txtError);
             getContentPane().add(jspError, BorderLayout.CENTER);
         } else {
-            Util.debug("JavancssFrame.showJavancss(..).NOERROR");
             JPanel pPanel = new JPanel(true);
             pPanel.setLayout(new BorderLayout());
             _pTabbedPane = new JTabbedPane();
@@ -268,7 +269,6 @@ public class JavancssFrame extends JFrame {
                 sTimeZoneID = "ECT";
             }
             TimeZone pTimeZone = TimeZone.getTimeZone(sTimeZoneID);
-            Util.debug("JavancssFrame.showJavancss(..).pTimeZone.getID(): " + pTimeZone.getID());
 
             SimpleDateFormat pSimpleDateFormat
                    = new SimpleDateFormat("EEE, MMM dd, yyyy  HH:mm:ss");//"yyyy.mm.dd e 'at' hh:mm:ss a z");
@@ -324,7 +324,9 @@ public class JavancssFrame extends JFrame {
     }
 
     public void setSelectedTab(String sTab_) {
-        Util.panicIf(Util.isEmpty(sTab_));
+        if (sTab_ == null || sTab_.trim().length() == 0) {
+            throw new IllegalArgumentException();
+        }
 
         if (!_bNoError) {
             return;
