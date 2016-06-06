@@ -27,8 +27,7 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-import ccl.util.FileUtil;
-import ccl.util.Util;
+import org.apache.commons.io.FileUtils;
 
 public class NcssTest extends AbstractTestCase
 {
@@ -320,8 +319,8 @@ public class NcssTest extends AbstractTestCase
         sw.write( "\n" );
         javancss.printFunctionNcss( sw );
 
-        String sOutput56 = Util.replace( sw.toString(), "\r\n", "\n" );
-        String sCompare56 = FileUtil.readFile( getTestFile( "Output56.txt" ).getAbsolutePath() );
+        String sOutput56 = sw.toString().replaceAll( "\r\n", "\n" );
+        String sCompare56 = FileUtils.readFileToString( getTestFile( "Output56.txt" ), "ISO-8859-1" );
         assertEquals( "File test/Output56.txt and javancss output differs", sOutput56, sCompare56 );
 
         // check that javadocs are counted correctly
@@ -334,8 +333,8 @@ public class NcssTest extends AbstractTestCase
         sw.write( "\n" );
         javancss.printFunctionNcss( sw );
 
-        String sOutput32 = Util.replace( sw.toString(), "\r\n", "\n" );
-        String sCompare32 = FileUtil.readFile( getTestFile( "Output32.txt" ).getAbsolutePath() );
+        String sOutput32 = sw.toString().replaceAll( "\r\n", "\n" );
+        String sCompare32 = FileUtils.readFileToString( getTestFile( "Output32.txt" ), "ISO-8859-1" );
         assertEquals( "File test/Output32.txt and javancss output differs", sOutput32, sCompare32 );
     }
 }

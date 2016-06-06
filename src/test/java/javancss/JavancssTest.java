@@ -20,7 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA*/
 
 package javancss;
 
-import ccl.util.FileUtil;
+import org.apache.commons.io.FileUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -61,8 +61,8 @@ public class JavancssTest extends AbstractTestCase
         String sTest12 = "";
         try
         {
-            sTest11 = FileUtil.readFile( getTestFile( 11 ).getAbsolutePath() );
-            sTest12 = FileUtil.readFile( getTestFile( 12 ).getAbsolutePath() );
+            sTest11 = FileUtils.readFileToString( getTestFile( 11 ), "ISO-8859-1" );
+            sTest12 = FileUtils.readFileToString( getTestFile( 12 ), "ISO-8859-1" );
         }
         catch ( IOException e )
         {

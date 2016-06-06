@@ -20,12 +20,16 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA*/
 
 package javancss;
 
-import java.io.File;
-import java.io.StringWriter;
+import java.io.*;
 
-import ccl.util.FileUtil;
-import ccl.util.Util;
-import ccl.xml.XMLUtil;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
+
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
 
 /**
  * This test class checks that the xml output feature is
@@ -53,7 +57,7 @@ public class XmlFormatterTest extends AbstractTestCase
         javancss.printJavaNcss( sw );
         javancss.printEnd( sw );
 
-        String sText = XMLUtil.getXML( sw.toString(), getXslFile( "xmltest.xsl" ) );
+        String sText = getXML( sw.toString(), getXslFile( "xmltest.xsl" ) );
         assertTrue( sText, sText.equals( "79" ) );
 
         javancss = measureTestFile( 117 );
@@ -66,7 +70,7 @@ public class XmlFormatterTest extends AbstractTestCase
         javancss.printJavaNcss( sw );
         javancss.printEnd( sw );
 
-        assertFalse( Util.isEmpty( sw.toString() ) );
+        assertFalse( StringUtils.isEmpty( sw.toString() ) );
 
         javancss = measureTestFile( 118 );
         javancss.setXML( true );
@@ -78,7 +82,7 @@ public class XmlFormatterTest extends AbstractTestCase
         javancss.printJavaNcss( sw );
         javancss.printEnd( sw );
 
-        assertFalse( Util.isEmpty( sw.toString() ) );
+        assertFalse( StringUtils.isEmpty( sw.toString() ) );
     }
 
     /**
@@ -98,14 +102,31 @@ public class XmlFormatterTest extends AbstractTestCase
         javancss.printJavaNcss( sw );
         javancss.printEnd( sw );
 
-        String sText = XMLUtil.getXML( sw.toString(), getXslFile( "javancss2text.xsl" ) );
+        String sText = getXML( sw.toString(), getXslFile( "javancss2text.xsl" ) );
         sText = sText.replaceAll( "(?:\r\n|\n\r)", "\n" );
-        String sCompare = FileUtil.readFile( getTestFile( "Output32.txt" ).getAbsolutePath() );
+        String sCompare = FileUtils.readFileToString( getTestFile( "Output32.txt" ), "ISO-8859-1" );
         assertTrue( sText, sText.equals( sCompare ) );
     }
 
     private File getXslFile( String filename )
     {
         return new File( getTestDir(), "../../xslt/" + filename );
+    }
+
+    private String getXML( String xmlContent, File xsltFile ) throws IOException, TransformerException
+    {
+        String xsltContent = FileUtils.readFileToString( xsltFile, "ISO-8859-1" );
+
+        StreamSource xmlSource = new StreamSource( new StringReader( xmlContent ) );
+        StreamSource styleSource = new StreamSource( new StringReader( xsltContent ) );
+
+        TransformerFactory transformerFactory = TransformerFactory.newInstance();
+        Transformer transformer = transformerFactory.newTransformer( styleSource );
+
+        ByteArrayOutputStream output = new ByteArrayOutputStream( 1024 );
+        StreamResult result = new StreamResult( output );
+        transformer.transform( xmlSource, result );
+
+        return output.toString();
     }
 }
