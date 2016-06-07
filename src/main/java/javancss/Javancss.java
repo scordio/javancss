@@ -63,7 +63,7 @@ public class Javancss
 
     private static final String DEFAULT_ENCODING = null;
     
-    private boolean _bExit = false;
+    private boolean exit = false;
 
     private List<File> _vJavaSourceFiles = null;
     private String encoding = DEFAULT_ENCODING;
@@ -245,19 +245,21 @@ public class Javancss
         }
     }
 
-    private void _measureFiles( List<File> vJavaSourceFiles_ )
-        throws TokenMgrError
+    private void _measureFiles( List<File> sourceFiles ) throws TokenMgrError
     {
-        for ( File file : vJavaSourceFiles_ )
+        for ( File file : sourceFiles )
         {
-            try
+            if ( !exit )
             {
-                _measureSource( file );
-            }
-            catch ( Throwable pThrowable )
-            {
-                // hmm, do nothing? Use getLastError() or so to check for details.
-                // error details have been written into lastError
+                try
+                {
+                    _measureSource( file );
+                }
+                catch ( Throwable pThrowable )
+                {
+                    // hmm, do nothing? Use getLastError() or so to check for details.
+                    // error details have been written into lastError
+                }
             }
         }
     }
@@ -669,16 +671,14 @@ public class Javancss
 
         if ( cl.hasOption( "gui" ) )
         {
-            final JavancssFrame pJavancssFrame = new JavancssFrame( cl.getArgList() );
+            JavancssFrame pJavancssFrame = new JavancssFrame( cl.getArgList() );
             /* final Thread pThread = Thread.currentThread(); */
             pJavancssFrame.addWindowListener( new WindowAdapter()
             {
                 @Override
-                public void windowClosing( WindowEvent e_ )
+                public void windowClosing( WindowEvent event )
                 {
-                    log.fine( "JavancssAll.run().WindowAdapter.windowClosing().1" );
-                    pJavancssFrame.setVisible( false );
-                    pJavancssFrame.dispose();
+                    setExit();
                 }
             } );
             pJavancssFrame.setVisible( true );
@@ -853,7 +853,7 @@ public class Javancss
 
     public void setExit()
     {
-        _bExit = true;
+        exit = true;
     }
 
     private boolean _bXML = false;
