@@ -28,9 +28,7 @@ import java.io.*;
 
 import javax.help.*;
 import javax.swing.*;
-import javax.swing.border.*;
 
-import ccl.swing.AnimationPanel;
 import ccl.util.Init;
 
 /**
@@ -45,10 +43,6 @@ public class JavancssFrame extends JFrame {
     public static final String S_PACKAGES = "Packages";
     public static final String S_CLASSES = "Classes";
     public static final String S_METHODS = "Methods";
-
-    private int _oldThreadPriority = -1;
-
-    private AnimationPanel _pAnimationPanel = null;
 
     private JTextArea _txtPackage;
     private JTextArea _txtObject;
@@ -124,16 +118,12 @@ public class JavancssFrame extends JFrame {
         GridBagLayout layout = new GridBagLayout();
 
         getContentPane().setLayout(layout);
-
-        Image image = Toolkit.getDefaultToolkit().getImage( AnimationPanel.class.getResource( "anim_recycle_brown.gif" ) );
-        _pAnimationPanel = new AnimationPanel( image, 350 );
-
-        JPanel pPanel = new JPanel();
-        pPanel.setBorder(new SoftBevelBorder(BevelBorder.LOWERED));
-        pPanel.add(_pAnimationPanel, BorderLayout.CENTER);
-
-        getContentPane().add(pPanel);
-
+        
+        JPanel busyPanel = new JPanel();
+        busyPanel.setLayout( new BorderLayout() );
+        busyPanel.add( new JLabel( new ImageIcon( getClass().getResource("/javancss/busy-squares.gif") ) ) );
+        
+        getContentPane().add(busyPanel);
 
         pack();
         setSize(640, 480);
@@ -215,10 +205,6 @@ public class JavancssFrame extends JFrame {
     }
 
     public void showJavancss(Javancss pJavancss_) throws IOException {
-        if (_oldThreadPriority != -1) {
-            Thread.currentThread().setPriority(_oldThreadPriority);
-            _pAnimationPanel.stop();
-        }
         getContentPane().removeAll();
         getContentPane().setLayout(new BorderLayout());
         _bNoError = true;
@@ -306,19 +292,6 @@ public class JavancssFrame extends JFrame {
 
         validate();
         repaint();
-    }
-
-    @Override
-    public void setVisible(boolean bVisible_) {
-        if (bVisible_) {
-            _oldThreadPriority = Thread.currentThread().getPriority();
-            _pAnimationPanel.start();
-            Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
-        } else {
-            _pAnimationPanel.stop();
-        }
-
-        super.setVisible(bVisible_);
     }
 
     public void setSelectedTab(String sTab_) {
