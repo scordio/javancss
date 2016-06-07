@@ -1,0 +1,6 @@
+<project name="JavaNCSS Task Test">
+    <target name="run">
+      <taskdef name="javancss" classname="javancss.JavancssAntTask" />
+      <javancss srcdir="../../src/main/java" includes="**/*.java" generateReport="yes" ccnPerFuncMax="100" abortOnFail="true" classMetrics="false" functionMetrics="false" />
+    </target>
+</project>
