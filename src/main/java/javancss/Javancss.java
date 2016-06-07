@@ -22,19 +22,7 @@ package javancss;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.io.Reader;
-import java.io.UnsupportedEncodingException;
-import java.io.Writer;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -46,7 +34,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import ccl.util.Exitable;
-import ccl.util.FileUtil;
 import ccl.util.Init;
 import ccl.util.Util;
 
@@ -582,13 +569,13 @@ public class Javancss
                 filename = filename.substring( 1 );
                 if ( filename.length() > 1 )
                 {
-                    filename = FileUtil.normalizeFileName( filename );
+                    filename = normalizeFileName( filename );
                     if ( _processedAtFiles.add( filename ) )
                     {
                         String sJavaSourceFileNames = null;
                         try
                         {
-                            sJavaSourceFileNames = FileUtil.readFile( filename );
+                            sJavaSourceFileNames = readFile( filename );
                         }
                         catch( IOException pIOException )
                         {
@@ -596,7 +583,7 @@ public class Javancss
                             _thrwError = pIOException;
                             throw pIOException;
                         }
-                        List<String> vTheseJavaSourceFiles = Util.stringToLines( sJavaSourceFileNames );
+                        String[] vTheseJavaSourceFiles = sJavaSourceFileNames.split( "\n" );
                         for ( String name : vTheseJavaSourceFiles )
                         {
                             newFiles.add( new File( name ) );
@@ -606,7 +593,7 @@ public class Javancss
             }
             else
             {
-                filename = FileUtil.normalizeFileName( filename );
+                filename = normalizeFileName( filename );
                 File file = new File( filename );
                 if ( file.isDirectory() )
                 {
@@ -716,7 +703,7 @@ public class Javancss
         {
             try
             {
-                out = new FileOutputStream( FileUtil.normalizeFileName( sOutputFile ) );
+                out = new FileOutputStream( normalizeFileName( sOutputFile ) );
             }
             catch ( Exception exception )
             {
@@ -893,5 +880,54 @@ public class Javancss
         throws FileNotFoundException, UnsupportedEncodingException
     {
         return newReader( new FileInputStream( file ) );
+    }
+
+    private String normalizeFileName( String filename )
+    {
+        String userdir = ( String ) System.getProperties().get( "user.dir" );
+
+        filename = filename.trim();
+        if ( filename.length() == 0 || filename.equals( "." ) )
+        {
+            filename = userdir;
+        }
+        else if ( !new File( filename ).isAbsolute() )
+        {
+            filename = new File( userdir, filename ).getPath();
+        }
+
+        try
+        {
+            return new File( filename ).getCanonicalPath();
+        }
+        catch ( IOException e )
+        {
+            return filename;
+        }
+    }
+
+    private String readFile( String filename ) throws IOException
+    {
+        StringBuilder content = new StringBuilder( 100000 );
+
+        BufferedReader in = null;
+        try
+        {
+            in = new BufferedReader( new FileReader( filename ) );
+            String line;
+            while ( ( line = in.readLine() ) != null )
+            {
+                content.append( line ).append( '\n' );
+            }
+        }
+        finally
+        {
+            if ( in != null )
+            {
+                in.close();
+            }
+        }
+
+        return content.toString();
     }
 }
