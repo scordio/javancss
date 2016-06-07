@@ -35,7 +35,6 @@ import java.util.logging.Logger;
 
 import ccl.util.Exitable;
 import ccl.util.Init;
-import ccl.util.Util;
 
 import javancss.parser.JavaParser;
 import javancss.parser.JavaParserDebug;
@@ -111,7 +110,7 @@ public class Javancss
         }
         catch ( IOException pIOException )
         {
-            if ( Util.isEmpty( _sErrorMessage ) )
+            if ( _sErrorMessage == null || _sErrorMessage.trim().length() == 0 )
             {
                 _sErrorMessage = "";
             }
@@ -138,7 +137,7 @@ public class Javancss
         }
         catch ( IOException pIOException )
         {
-            if ( Util.isEmpty( _sErrorMessage ) )
+            if ( _sErrorMessage == null || _sErrorMessage.trim().length() == 0 )
             {
                 _sErrorMessage = "";
             }
@@ -690,7 +689,7 @@ public class Javancss
         }
         if ( getLastErrorMessage() != null )
         {
-            Util.printlnErr( getLastErrorMessage() + "\n" );
+            System.err.println( getLastErrorMessage() + "\n" );
             if ( getNcss() <= 0 )
             {
                 return;
@@ -707,10 +706,7 @@ public class Javancss
             }
             catch ( Exception exception )
             {
-                Util.printlnErr( "Error opening output file '"
-                                 + sOutputFile
-                                 + "': " + exception.getMessage() );
-
+                System.err.println( "Error opening output file '" + sOutputFile + "': " + exception.getMessage() );
                 sOutputFile = null;
             }
         }
