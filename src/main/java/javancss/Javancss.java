@@ -69,9 +69,6 @@ public class Javancss
     implements Exitable
 {
     private static final String S_INIT__FILE_CONTENT =
-        "[Init]\n" +
-        "Author=Chr. Clemens Lee\n" +
-        "\n" +
         "[Help]\n"+
         "; Please do not edit the Help section\n"+
         "HelpUsage=@srcfiles.txt | *.java | <stdin>\n" +
@@ -647,7 +644,7 @@ public class Javancss
     public Javancss( String[] asArgs_ )
         throws IOException
     {
-        Init _pInit = new Init( this, asArgs_, Main.S_RCS_HEADER, S_INIT__FILE_CONTENT );
+        Init _pInit = new Init( this, asArgs_, "$Header: /javancss/Main.java,v 0.0 2001/01/01 00:00:00 clemens Exp clemens $", S_INIT__FILE_CONTENT );
         if ( _bExit )
         {
             return;

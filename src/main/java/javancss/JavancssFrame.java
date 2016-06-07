@@ -30,7 +30,6 @@ import javax.help.*;
 import javax.swing.*;
 import javax.swing.border.*;
 
-import ccl.swing.AboutDialog;
 import ccl.swing.AnimationPanel;
 import ccl.util.Init;
 
@@ -205,9 +204,8 @@ public class JavancssFrame extends JFrame {
         {
             public void actionPerformed( ActionEvent e )
             {
-                AboutDialog dlgAbout = new AboutDialog( JavancssFrame.this, "Chr. Clemens Lee", javancss.Main.S_RCS_HEADER );
-                dlgAbout.dispose();
-                requestFocus();
+                AboutDialog about = new AboutDialog( JavancssFrame.this, "JavaNCSS", getClass().getPackage().getSpecificationVersion(), "Chr. Clemens Lee & co" );
+                about.dispose();
             }
         } );
         
@@ -340,6 +338,66 @@ public class JavancssFrame extends JFrame {
         } else {
             /*_pTabbedPane.setSelectedComponent(_txtPackage);*/
             _pTabbedPane.setSelectedIndex(0);
+        }
+    }
+
+    private static class AboutDialog extends JDialog
+    {
+        private JLabel labelName = new JLabel();
+        private JLabel labelVersion = new JLabel();
+        private JLabel labelAuthor = new JLabel( "Author:" );
+        private JLabel labelRealAuthor = new JLabel();
+        private JLabel labelDate = new JLabel( "Last change:" );
+        private JLabel labelRealDate = new JLabel();
+
+        public AboutDialog( Frame parent, String programName, String version, String author)
+        {
+            super( parent, "About", true );
+
+            labelName.setText( programName );
+            labelName.setFont( labelName.getFont().deriveFont( Font.BOLD, 14 ) );
+            
+            labelVersion.setText( version );
+            labelVersion.setFont( labelVersion.getFont().deriveFont( Font.PLAIN ) );
+            labelRealDate.setText( getDate() );
+            labelRealDate.setFont( labelRealDate.getFont().deriveFont( Font.PLAIN ) );
+            labelRealAuthor.setText( author );
+            labelRealAuthor.setFont( labelRealAuthor.getFont().deriveFont( Font.PLAIN ) );
+
+            ( ( JPanel ) getContentPane() ).setBorder( BorderFactory.createEmptyBorder( 25, 40, 25, 40 ) );
+
+            getContentPane().setLayout( new GridLayout( 3, 2, 0, 10 ) );
+
+            getContentPane().add( labelName );
+            getContentPane().add( labelVersion );
+            getContentPane().add( labelAuthor );
+            getContentPane().add( labelRealAuthor );
+            getContentPane().add( labelDate );
+            getContentPane().add( labelRealDate );
+
+            pack();
+            
+            // center the dialog relatively to the parent frame
+            Dimension parentSize = parent.getSize();
+            setLocation(parent.getLocation().x + ( parentSize.width - getWidth() ) / 2,
+                        parent.getLocation().y + ( parentSize.height - getHeight() ) / 2 );
+            
+            setVisible( true );
+        }
+
+        private String getDate() {
+            try
+            {
+                String classfile = "/" + getClass().getName().replaceAll( "\\.", "/" ) + ".class";
+                long timestamp = getClass().getResource( classfile ).openConnection().getLastModified();
+                return DateFormat.getDateTimeInstance().format( new Date(timestamp) );
+            }
+            catch ( IOException e )
+            {
+                e.printStackTrace();
+            }
+            
+            return null;
         }
     }
 }
