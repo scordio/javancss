@@ -51,10 +51,10 @@ import ccl.util.Init;
 import ccl.util.Util;
 
 import javancss.parser.JavaParser;
+import javancss.parser.JavaParserDebug;
 import javancss.parser.JavaParserInterface;
 import javancss.parser.JavaParserTokenManager;
 import javancss.parser.TokenMgrError;
-import javancss.parser.debug.JavaParserDebug;
 
 /**
  * While the Java parser class might be the heart of JavaNCSS,

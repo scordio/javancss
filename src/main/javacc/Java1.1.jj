@@ -287,7 +287,6 @@ TOKEN_MGR_DECLS :
     public static int  _iSingleComments = 0;
     public static int  _iMultiComments = 0;
     public static int  _iFormalComments = 0;
-
     public static int  _iMultiCommentsLast = 0;
 
     public static int nbligne = 1; //Added by REYNAUD Sebastien (LOGICA)

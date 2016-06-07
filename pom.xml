@@ -311,6 +311,7 @@
           <instrumentation>
             <excludes>
               <exclude>**/JavancssFrame*.class</exclude>
+              <exclude>**/JavaParserDebugTokenManager*.class</exclude>
             </excludes>
           </instrumentation>
         </configuration>
@@ -437,6 +438,7 @@
           <instrumentation>
             <excludes>
               <exclude>**/JavancssFrame*.class</exclude>
+              <exclude>**/JavaParserDebugTokenManager*.class</exclude>
             </excludes>
           </instrumentation>
         </configuration>
