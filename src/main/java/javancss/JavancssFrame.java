@@ -22,12 +22,12 @@ package javancss;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.net.URI;
 import java.util.*;
 import java.text.*;
 import java.io.*;
 import java.util.List;
 
-import javax.help.*;
 import javax.swing.*;
 
 /**
@@ -162,17 +162,22 @@ public class JavancssFrame extends JFrame {
     {
         JMenu menu = new JMenu( "Help" );
 
-        JMenuItem item = new JMenuItem( "Contents..." , 'C');
-        try
+        JMenuItem item = new JMenuItem( "Project page...", 'P' );
+        item.addActionListener( new ActionListener()
         {
-            HelpBroker broker = new HelpSet( null, getClass().getClassLoader().getResource( "javancss/javancss.hs" ) ).createHelpBroker();
-            item.addActionListener( new CSH.DisplayHelpFromSource( broker ) );
-        }
-        catch ( HelpSetException e )
-        {
-            e.printStackTrace();
-        }
-        
+            public void actionPerformed( ActionEvent event )
+            {
+                try
+                {
+                    Desktop.getDesktop().browse( new URI( "https://github.com/JavaNCSS/javancss" ) );
+                }
+                catch ( Exception e )
+                {
+                    e.printStackTrace();
+                }
+            }
+        } );
+
         menu.add( item );
         menu.addSeparator();
         
