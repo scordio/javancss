@@ -25,11 +25,10 @@ import java.awt.event.*;
 import java.util.*;
 import java.text.*;
 import java.io.*;
+import java.util.List;
 
 import javax.help.*;
 import javax.swing.*;
-
-import ccl.util.Init;
 
 /**
  * Main class used to start JavaNCSS in GUI mode from other
@@ -55,14 +54,11 @@ public class JavancssFrame extends JFrame {
 
     private boolean _bNoError = true;
 
-    private String _sProjectName = null;
-    private String _sProjectPath = null;
-
     public void save() {
-        File targetDirectory = new File(_sProjectPath);
-        File packagesFile = new File( targetDirectory, _sProjectName.toLowerCase() + ".packages.txt" );
-        File classesFile  = new File( targetDirectory, _sProjectName.toLowerCase() + ".classes.txt" );
-        File methodsFile  = new File( targetDirectory, _sProjectName.toLowerCase() + ".methods.txt" );
+        File targetDirectory = new File(".");
+        File packagesFile = new File( targetDirectory, "javancss-packages.txt" );
+        File classesFile  = new File( targetDirectory, "javancss-classes.txt" );
+        File methodsFile  = new File( targetDirectory, "javancss-methods.txt" );
 
         String sSuccessMessage = "Data appended successfully to the following files:";
 
@@ -97,21 +93,12 @@ public class JavancssFrame extends JFrame {
         writer.close();
     }
 
-    public JavancssFrame(Init pInit_) {
-        super( "JavaNCSS: " + pInit_.getFileName() );
-
-        super.setBackground( pInit_.getBackground() );
+    public JavancssFrame( List<String> files )
+    {
+        super( "JavaNCSS: " + files );
 
         setDefaultCloseOperation( DISPOSE_ON_CLOSE );
         setIconImage( new ImageIcon( getClass().getClassLoader().getResource( "javancss/javancssframe.gif" ) ).getImage() );
-
-        _sProjectName = pInit_.getFileName();
-        _sProjectPath = pInit_.getFilePath();
-        if ( _sProjectName == null || _sProjectName.trim().length() == 0 )
-        {
-            _sProjectName = pInit_.getApplicationName();
-            _sProjectPath = pInit_.getApplicationPath();
-        }
 
         createMenuBar();
 

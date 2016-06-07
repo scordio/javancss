@@ -33,8 +33,12 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import ccl.util.Exitable;
-import ccl.util.Init;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.OptionBuilder;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
 
 import javancss.parser.JavaParser;
 import javancss.parser.JavaParserDebug;
@@ -54,27 +58,7 @@ import javancss.parser.TokenMgrError;
  * @version   $Id$
  */
 public class Javancss
-    implements Exitable
 {
-    private static final String S_INIT__FILE_CONTENT =
-        "[Help]\n"+
-        "; Please do not edit the Help section\n"+
-        "HelpUsage=@srcfiles.txt | *.java | <stdin>\n" +
-        "Options=ncss,package,object,function,all,gui,xml,out,recursive,encoding\n" +
-        "ncss=b,o,Counts the program NCSS (default).\n" +
-        "package=b,o,Assembles a statistic on package level.\n" +
-        "object=b,o,Counts the object NCSS.\n" +
-        "function=b,o,Counts the function NCSS.\n" +
-        "all=b,o,The same as '-function -object -package'.\n" +
-        "gui=b,o,Opens a gui to present the '-all' output in tabbed panels.\n" +
-        "xml=b,o,Output in xml format.\n" +
-        "out=s,o,Output file name. By default output goes to standard out.\n"+
-        "recursive=b,o,Recurse to subdirs.\n" +
-        "encoding=s,o,Encoding used while reading source files (default: platform encoding).\n" +
-        "\n" +
-        "[Colors]\n" +
-        "UseSystemColors=true\n";
-
     private Logger log = Logger.getLogger( getClass().getName() );
 
     private static final String DEFAULT_ENCODING = null;
@@ -617,10 +601,9 @@ public class Javancss
      * @deprecated use Javancss(String[]) instead, since the sRcsHeader_ parameter is not useful
      */
     @Deprecated
-    public Javancss( String[] asArgs_, String sRcsHeader_ )
-        throws IOException
+    public Javancss( String[] args, String sRcsHeader_ ) throws IOException
     {
-        this( asArgs_ );
+        this( args );
     }
 
     /**
@@ -629,25 +612,64 @@ public class Javancss
      * Other constructors might be helpful to use Javancss out
      * of other programs.
      */
-    public Javancss( String[] asArgs_ )
-        throws IOException
+    public Javancss( String[] args ) throws IOException
     {
-        Init _pInit = new Init( this, asArgs_, "$Header: /javancss/Main.java,v 0.0 2001/01/01 00:00:00 clemens Exp clemens $", S_INIT__FILE_CONTENT );
-        if ( _bExit )
+        Options options = new Options();
+        options.addOption( OptionBuilder.create( "help" ) );
+        options.addOption( OptionBuilder.create( "version" ) );
+        options.addOption( OptionBuilder.create( "debug" ) );
+        options.addOption( OptionBuilder.withDescription( "Counts the program NCSS (default)." ).create( "ncss" ) );
+        options.addOption( OptionBuilder.withDescription( "Assembles a statistic on package level." ).create( "package" ) );
+        options.addOption( OptionBuilder.withDescription( "Counts the object NCSS." ).create( "object" ) );
+        options.addOption( OptionBuilder.withDescription( "Counts the function NCSS." ).create( "function" ) );
+        options.addOption( OptionBuilder.withDescription( "The same as '-function -object -package'." ).create( "all" ) );
+        options.addOption( OptionBuilder.withDescription( "Opens a GUI to present the '-all' output in tabbed panels." ).create( "gui" ) );
+        options.addOption( OptionBuilder.withDescription( "Output in XML format." ).create( "xml" ) );
+        options.addOption( OptionBuilder.withDescription( "Output file name. By default output goes to standard out." ).create( "out" ) );
+        options.addOption( OptionBuilder.withDescription( "Recurse to subdirs." ).create( "recursive" ) );
+        options.addOption( OptionBuilder.withDescription( "Encoding used while reading source files (default: platform encoding)." ).hasArg().create( "encoding" ) );
+       
+        CommandLine cl;
+
+        try
         {
+            cl = new DefaultParser().parse( options, args );
+        }
+        catch ( ParseException e )
+        {
+            System.err.println( "javancss: " + e.getMessage() );
+            System.err.println( "Try `javancss -help' for more information." );
             return;
         }
-        Map<String, String> htOptions = _pInit.getOptions();
 
-        setEncoding( htOptions.get( "encoding" ) );
-        setXML( htOptions.get( "xml" ) != null );
+        if ( cl.hasOption( "help" ) )
+        {
+            HelpFormatter helpFormatter = new HelpFormatter();
+            helpFormatter.printHelp( "javancss [options] @srcfiles.txt | *.java | <directory> | <stdin>", options );
+
+            return;
+        }
+
+        if ( cl.hasOption( "version" ) )
+        {
+            System.out.println( "JavaNCSS " + getClass().getPackage().getSpecificationVersion() + " by Chr. Clemens Lee & co" );
+            return;
+        }
+
+        if ( cl.hasOption( "debug" ) )
+        {
+            log.setLevel( Level.FINE );
+        }
+
+        setEncoding( cl.getOptionValue( "encoding" ) );
+        setXML( cl.hasOption( "xml" ) );
 
         // the arguments (the files) to be processed
-        _vJavaSourceFiles = findFiles( _pInit.getArguments(), htOptions.get( "recursive" ) != null );
+        _vJavaSourceFiles = findFiles( cl.getArgList(), cl.hasOption( "recursive" ) );
 
-        if ( htOptions.get( "gui" ) != null )
+        if ( cl.hasOption( "gui" ) )
         {
-            final JavancssFrame pJavancssFrame = new JavancssFrame( _pInit );
+            final JavancssFrame pJavancssFrame = new JavancssFrame( cl.getArgList() );
             /* final Thread pThread = Thread.currentThread(); */
             pJavancssFrame.addWindowListener( new WindowAdapter()
             {
@@ -696,7 +718,7 @@ public class Javancss
             }
         }
 
-        String sOutputFile = htOptions.get( "out" );
+        String sOutputFile = cl.getOptionValue( "out" );
         OutputStream out = System.out;
         if ( sOutputFile != null )
         {
@@ -714,7 +736,7 @@ public class Javancss
         final PrintWriter pw = useXML() ? new PrintWriter( new OutputStreamWriter( out, "UTF-8" ) ) : new PrintWriter( out );
         try {
 
-            format( pw, htOptions );
+            format( pw, cl.hasOption( "package" ), cl.hasOption( "object" ), cl.hasOption( "function" ), cl.hasOption( "all" ) );
 
         } finally {
             if ( sOutputFile != null )
@@ -729,18 +751,18 @@ public class Javancss
         }
     }
 
-    private void format( PrintWriter pw, Map<String, String> htOptions )
+    private void format( PrintWriter pw, boolean packages, boolean object, boolean function, boolean all )
         throws IOException
     {
         printStart( pw );
    
         boolean bNoNCSS = false;
-        if ( htOptions.get( "package" ) != null || htOptions.get( "all" ) != null )
+        if ( packages || all )
         {
             printPackageNcss( pw );
             bNoNCSS = true;
         }
-        if ( htOptions.get( "object" ) != null || htOptions.get( "all" ) != null )
+        if ( object || all )
         {
             if ( bNoNCSS )
             {
@@ -749,7 +771,7 @@ public class Javancss
             printObjectNcss( pw );
             bNoNCSS = true;
         }
-        if ( htOptions.get( "function" ) != null || htOptions.get( "all" ) != null )
+        if ( function || all )
         {
             if ( bNoNCSS )
             {

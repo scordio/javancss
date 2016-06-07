@@ -33,14 +33,13 @@ import java.util.Locale;
  */
 public class Main
 {
-    public static void main( String[] asArgs )
-        throws IOException
+    public static void main( String[] args ) throws IOException
     {
         Locale.setDefault( Locale.US );
 
-        Javancss pJavancss = new Javancss( asArgs );
+        Javancss javancss = new Javancss( args );
 
-        if ( pJavancss.getLastErrorMessage() != null )
+        if ( javancss.getLastErrorMessage() != null )
         {
             System.exit( 1 );
         }
