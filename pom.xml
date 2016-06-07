@@ -308,6 +308,11 @@
             <format>xml</format>
             <format>html</format>
           </formats>
+          <instrumentation>
+            <excludes>
+              <exclude>**/JavancssFrame*.class</exclude>
+            </excludes>
+          </instrumentation>
         </configuration>
       </plugin>
       <plugin>
@@ -424,6 +429,11 @@
             <format>xml</format>
             <format>html</format>
           </formats>
+          <instrumentation>
+            <excludes>
+              <exclude>**/JavancssFrame*.class</exclude>
+            </excludes>
+          </instrumentation>
         </configuration>
       </plugin>
     </plugins>
