@@ -21,32 +21,33 @@ Boston, MA 02111-1307, USA.  */
 
 package javancss;
 
-import ccl.util.Util;
+import org.apache.commons.io.output.NullOutputStream;
 
-import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ParseDebugTest extends ParseTest
 {
     @Override
     protected Javancss measureTestFile( int testFileId )
     {
-        Util.setDebug( true );
-
+        Logger logger = Logger.getLogger( "javancss" );
+        logger.setLevel( Level.FINEST );
+        
         PrintStream stdout = System.out;
         PrintStream stderr = System.err;
 
         try
         {
-            System.setOut( new PrintStream( new ByteArrayOutputStream() ) );
-            System.setErr( new PrintStream( new ByteArrayOutputStream() ) );
+            System.setOut( new PrintStream( new NullOutputStream() ) );
+            System.setErr( new PrintStream( new NullOutputStream() ) );
             
             return super.measureTestFile( testFileId );
         }
         finally
         {
-            Util.setDebug( false );
-            
+            logger.setLevel( Level.OFF );
             System.setOut( stdout );
             System.setErr( stderr );
         }

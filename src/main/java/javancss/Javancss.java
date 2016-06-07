@@ -42,6 +42,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import ccl.util.Exitable;
 import ccl.util.FileUtil;
@@ -86,6 +88,8 @@ public class Javancss
         "\n" +
         "[Colors]\n" +
         "UseSystemColors=true\n";
+
+    private Logger log = Logger.getLogger( getClass().getName() );
 
     private static final String DEFAULT_ENCODING = null;
     
@@ -200,27 +204,25 @@ public class Javancss
     private void _measureSource( Reader reader )
         throws Exception, Error
     {
-        Util.debug( "_measureSource(Reader).ENTER" );
-        // Util.panicIf( _pInit == null );
-        // Util.panicIf( _pInit.getOptions() == null );
-        Util.debug( "_measureSource(Reader).ENTER2" );
+        log.fine( "_measureSource(Reader).ENTER" );
+
         try
         {
             // create a parser object
-            if ( Util.isDebug() )
+            if ( log.isLoggable( Level.FINE ) )
             {
-                Util.debug( "creating JavaParserDebug" );
+                log.fine( "creating JavaParserDebug" );
                 _pJavaParser = new JavaParserDebug( reader );
             }
             else
             {
-                Util.debug( "creating JavaParser" );
+                log.fine( "creating JavaParser" );
                 _pJavaParser = new JavaParser( reader );
             }
 
             // execute the parser
             _pJavaParser.parse();
-            Util.debug( "Javancss._measureSource(DataInputStream).SUCCESSFULLY_PARSED" );
+            log.fine( "Javancss._measureSource(DataInputStream).SUCCESSFULLY_PARSED" );
 
             _ncss += _pJavaParser.getNcss(); // increment the ncss
             _loc += _pJavaParser.getLOC(); // and loc
@@ -398,7 +400,7 @@ public class Javancss
         }
         catch ( Throwable pThrowable )
         {
-            Util.debug( "Javancss._measureRoot().e: " + pThrowable );
+            log.fine( "Javancss._measureRoot().e: " + pThrowable );
             pThrowable.printStackTrace(System.err);
         }
     }
@@ -410,7 +412,7 @@ public class Javancss
 
     public Javancss( File sJavaSourceFile_, String encoding_ )
     {
-        Util.debug( "Javancss.<init>(String).sJavaSourceFile_: " + sJavaSourceFile_ );
+        log.fine( "Javancss.<init>(String).sJavaSourceFile_: " + sJavaSourceFile_ );
         setEncoding( encoding_ );
         _sErrorMessage = null;
         _vJavaSourceFiles = new ArrayList<File>();
@@ -432,22 +434,22 @@ public class Javancss
     {
         if ( _sJavaSourceFile == null )
         {
-            Util.debug( "Javancss.parseImports().NO_FILE" );
+            log.fine( "Javancss.parseImports().NO_FILE" );
 
             return true;
         }
         Reader reader = createSourceReader( _sJavaSourceFile );
         if ( reader == null )
         {
-            Util.debug( "Javancss.parseImports().NO_DIS" );
+            log.fine( "Javancss.parseImports().NO_DIS" );
 
             return true;
         }
 
         try
         {
-            Util.debug( "Javancss.parseImports().START_PARSING" );
-            if ( !Util.isDebug() )
+            log.fine( "Javancss.parseImports().START_PARSING" );
+            if ( !log.isLoggable( Level.FINE ) )
             {
                 _pJavaParser = new JavaParser( reader );
             }
@@ -458,11 +460,11 @@ public class Javancss
             _pJavaParser.parseImportUnit();
             _vImports = _pJavaParser.getImports();
             _aoPackage = _pJavaParser.getPackageObjects();
-            Util.debug( "Javancss.parseImports().END_PARSING" );
+            log.fine( "Javancss.parseImports().END_PARSING" );
         }
         catch ( Exception pParseException )
         {
-            Util.debug( "Javancss.parseImports().PARSE_EXCEPTION" );
+            log.fine( "Javancss.parseImports().PARSE_EXCEPTION" );
             if ( _sErrorMessage == null )
             {
                 _sErrorMessage = "";
@@ -479,7 +481,7 @@ public class Javancss
         }
         catch ( Error pTokenMgrError )
         {
-            Util.debug( "Javancss.parseImports().TOKEN_ERROR" );
+            log.fine( "Javancss.parseImports().TOKEN_ERROR" );
             if ( _sErrorMessage == null )
             {
                 _sErrorMessage = "";
@@ -515,7 +517,7 @@ public class Javancss
         }
         catch ( Throwable pThrowable )
         {
-            Util.debug( "Javancss.<init>(Reader).e: " + pThrowable );
+            log.fine( "Javancss.<init>(Reader).e: " + pThrowable );
             pThrowable.printStackTrace(System.err);
         }
     }
@@ -553,9 +555,9 @@ public class Javancss
     private List<File> findFiles( List<String> filenames, boolean recursive )
         throws IOException
     {
-        if ( Util.isDebug() )
+        if ( log.isLoggable( Level.FINE ) )
         {
-            Util.debug( "filenames: " + Util.toString( filenames ) );
+            log.fine( "filenames: " + filenames );
         }
         if ( filenames.size() == 0 )
         {
@@ -617,9 +619,9 @@ public class Javancss
             }
         }
 
-        if ( Util.isDebug() )
+        if ( log.isLoggable( Level.FINE ) )
         {
-            Util.debug( "resolved filenames: " + Util.toString( newFiles ) );
+            log.fine( "resolved filenames: " + newFiles );
         }
 
         return newFiles;
@@ -666,7 +668,7 @@ public class Javancss
                 @Override
                 public void windowClosing( WindowEvent e_ )
                 {
-                    Util.debug( "JavancssAll.run().WindowAdapter.windowClosing().1" );
+                    log.fine( "JavancssAll.run().WindowAdapter.windowClosing().1" );
                     pJavancssFrame.setVisible( false );
                     pJavancssFrame.dispose();
                 }
@@ -696,7 +698,7 @@ public class Javancss
         }
         catch ( Throwable pThrowable )
         {
-            Util.debug( "Javancss.<init>(String[]).e: " + pThrowable );
+            log.fine( "Javancss.<init>(String[]).e: " + pThrowable );
             pThrowable.printStackTrace(System.err);
         }
         if ( getLastErrorMessage() != null )
