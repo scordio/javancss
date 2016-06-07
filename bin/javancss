@@ -3,14 +3,9 @@
 # Script to start JavaNCSS. (Parts are copied from jakarta-ant
 # startup script.)
 #
-# Maybe you have to set SWING_HOME if using jdk 1.1 (see below).
 
 JAVA_HOME=`which java 2>/dev/null || whence java`
 JAVA_HOME=`dirname "$JAVA_HOME"`/..
-
-if [ "$SWING_HOME" = "" ] ; then
-  SWING_HOME=${JAVA_HOME}/../swing-1.1.1fcs
-fi
 
 if [ "$JAVANCSS_HOME" = "" ] ; then
   # try to find JAVANCSS
@@ -37,11 +32,6 @@ CLASSPATH=${JAVANCSS_HOME}/classes
 CLASSPATH=${CLASSPATH}:${JAVANCSS_HOME}/lib/javancss.jar
 CLASSPATH=${CLASSPATH}:${JAVANCSS_HOME}/lib/ccl.jar
 CLASSPATH=${CLASSPATH}:${JAVANCSS_HOME}/lib/jhbasic.jar
-
-# in case jdk 1.1 is used these archives are needed
-# otherwise they don't do any harm
-CLASSPATH=${CLASSPATH}:${JAVA_HOME}/lib/classes.zip
-CLASSPATH=${CLASSPATH}:${SWING_HOME}/swingall.jar
 
 CLASSPATH=${CLASSPATH}:${ORIG_CLASSPATH}
 
