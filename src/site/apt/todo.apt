@@ -11,19 +11,6 @@ JavaNCSS TODO list
   * Maven build
   
     * fix all warnings in mvn clean verify site
-    
-
-  * use JUnit?
-
-    * pros: well known by many developers, IDE integration,
-    {{{http://maven.apache.org/plugins/maven-surefire-report-plugin/}Maven reporting integration}},
-    with {{{http://mojo.codehaus.org/cobertura-maven-plugin/}code coverage too}}
-
-    * cons: large effort to change all tests, the tests use their own testing and assertion framework
-
-    Test available in SVN {{{http://svn.codehaus.org/javancss/branches/javancss-junit/}branches/javancss-junit}}, with reports
-    {{{http://javancss.codehaus.org/junit/project-reports.html}here}} (compare with
-    {{{http://javancss.codehaus.org/project-reports.html}actual ones}}).
 
 
   * avoid <<<Object[] aoImport>>>?
@@ -47,3 +34,5 @@ Done
   * use Collection API instead of <<<Vector>>> and <<<Hashtable>>>
 
   * remove the ccl and jhbasic dependencies
+  
+  * use JUnit
