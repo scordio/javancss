@@ -38,7 +38,7 @@
   </xsl:template>
 
   <xsl:template match="package">
-    <xsl:value-of select="Util:paddWithSpace(substring-before(Util:dtoa(position()),'.0'),java:java.lang.Math.max(string-length(count(../package)),3))" xmlns:Util="xalan://ccl.util.Util" xmlns:String="xalan://java.lang.String" xmlns:Math="xalan://java.lang.Math"/>
+    <xsl:value-of select="Util:paddWithSpace(substring-before(java:java.lang.String.valueOf(position()),'.0'),java:java.lang.Math.max(string-length(count(../package)),3))" xmlns:Util="xalan://ccl.util.Util" xmlns:String="xalan://java.lang.String" xmlns:Math="xalan://java.lang.Math"/>
     <xsl:text> </xsl:text>
     <xsl:value-of select="Util:paddWithSpace(classes,9)" xmlns:Util="xalan://ccl.util.Util"/>
     <xsl:text> </xsl:text>
@@ -98,7 +98,7 @@ Program NCSS:                    </xsl:text>
   </xsl:template>
 
   <xsl:template match="object">
-    <xsl:value-of select="java:ccl.util.Util.paddWithSpace(substring-before(java:ccl.util.Util.dtoa(position()),'.0'),java:java.lang.Math.max(string-length(count(../object)),3))"/>
+    <xsl:value-of select="java:ccl.util.Util.paddWithSpace(substring-before(java:java.lang.String.valueOf(position()),'.0'),java:java.lang.Math.max(string-length(count(../object)),3))"/>
     <xsl:text> </xsl:text>
     <xsl:value-of select="Util:paddWithSpace(ncss,4)" xmlns:Util="xalan://ccl.util.Util"/>
     <xsl:text> </xsl:text>
@@ -134,7 +134,7 @@ Program NCSS:          </xsl:text>
   </xsl:template>
 
   <xsl:template match="function">
-    <xsl:value-of select="java:ccl.util.Util.paddWithSpace(substring-before(java:ccl.util.Util.dtoa(position()),'.0'),java:java.lang.Math.max(string-length(count(../function)),3))"/>
+    <xsl:value-of select="java:ccl.util.Util.paddWithSpace(substring-before(java:java.lang.String.valueOf(position()),'.0'),java:java.lang.Math.max(string-length(count(../function)),3))"/>
     <xsl:text> </xsl:text>
     <xsl:value-of select="Util:paddWithSpace(ncss,4)" xmlns:Util="xalan://ccl.util.Util"/>
     <xsl:text> </xsl:text>
