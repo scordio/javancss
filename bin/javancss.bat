@@ -15,7 +15,7 @@ if NOT "%JAVA_HOME%"=="" goto endif1
 :endif1
 
 REM #################### EDIT THIS ENVIRONMENT VARIABLE IF NOT ALREADY SET #################
-set CLASSPATH=%JAVANCSS_HOME%\lib\javancss.jar;%JAVANCSS_HOME%\lib\ccl.jar;%JAVANCSS_HOME%\lib\jhbasic.jar
+set CLASSPATH=%JAVANCSS_HOME%\lib\javancss.jar
 
 "%JAVA_HOME%\bin\java" -classpath %CLASSPATH% javancss.Main %1 %2 %3 %4 %5 %6 %7 %8 %9
 
