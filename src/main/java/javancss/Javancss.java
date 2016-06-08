@@ -46,6 +46,8 @@ import javancss.parser.JavaParserInterface;
 import javancss.parser.JavaParserTokenManager;
 import javancss.parser.TokenMgrError;
 
+import javax.swing.*;
+
 /**
  * While the Java parser class might be the heart of JavaNCSS,
  * this class is the brain. This class controls input and output and
@@ -671,6 +673,14 @@ public class Javancss
 
         if ( cl.hasOption( "gui" ) )
         {
+            try
+            {
+                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            }
+            catch ( Exception e )
+            {
+            }
+
             JavancssFrame pJavancssFrame = new JavancssFrame( cl.getArgList() );
             /* final Thread pThread = Thread.currentThread(); */
             pJavancssFrame.addWindowListener( new WindowAdapter()
