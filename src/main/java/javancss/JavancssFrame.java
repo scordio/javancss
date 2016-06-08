@@ -113,7 +113,7 @@ public class JavancssFrame extends JFrame {
         getContentPane().add(busyPanel);
 
         pack();
-        setSize(640, 480);
+        setSize(800, 600);
         
         // center the frame on the screen
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
