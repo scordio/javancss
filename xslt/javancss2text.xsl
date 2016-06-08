@@ -5,26 +5,42 @@
  
   <xsl:output method="text"/>
 
+  <xsl:template name="pad">
+    <xsl:param name="value"/>
+    <xsl:param name="length"/>
+    <xsl:choose>
+      <xsl:when test="string-length($value) &lt; $length">
+        <xsl:call-template name="pad">
+          <xsl:with-param name="value" select="concat(' ',$value)"/>
+          <xsl:with-param name="length" select="$length"/>
+        </xsl:call-template>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="$value"/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+    
   <xsl:template match="packages">
-    <xsl:value-of select="java:ccl.util.Util.paddWithSpace('Nr.',java:java.lang.Math.max(string-length(count(package)),3))"/>
+    <xsl:call-template name="pad"><xsl:with-param name="length" select="java:java.lang.Math.max(string-length(count(package)),3)"/><xsl:with-param name="value" select="'Nr.'"/></xsl:call-template>
     <xsl:text>   Classes Functions      NCSS  Javadocs Package
 </xsl:text>
 
     <xsl:apply-templates select="package"/>
 
-    <xsl:value-of select="java:ccl.util.Util.paddWithSpace('   ',java:java.lang.Math.max(string-length(count(package)),3))"/>
+    <xsl:call-template name="pad"><xsl:with-param name="length" select="java:java.lang.Math.max(string-length(count(package)),3)"/><xsl:with-param name="value" select="'   '"/></xsl:call-template>
     <xsl:text> --------- --------- --------- ---------
 </xsl:text>
 
-    <xsl:value-of select="java:ccl.util.Util.paddWithSpace('   ',java:java.lang.Math.max(string-length(count(package)),4))"/>
+    <xsl:call-template name="pad"><xsl:with-param name="length" select="java:java.lang.Math.max(string-length(count(package)),4)"/><xsl:with-param name="value" select="'   '"/></xsl:call-template>
 
-    <xsl:value-of select="Util:paddWithSpace(total/classes,9)" xmlns:Util="xalan://ccl.util.Util"/>
+    <xsl:call-template name="pad"><xsl:with-param name="length" select="9"/><xsl:with-param name="value" select="total/classes"/></xsl:call-template>
     <xsl:text> </xsl:text>
-    <xsl:value-of select="Util:paddWithSpace(total/functions,9)" xmlns:Util="xalan://ccl.util.Util"/>
+    <xsl:call-template name="pad"><xsl:with-param name="length" select="9"/><xsl:with-param name="value" select="total/functions"/></xsl:call-template>
     <xsl:text> </xsl:text>
-    <xsl:value-of select="Util:paddWithSpace(total/ncss,9)" xmlns:Util="xalan://ccl.util.Util"/>
+    <xsl:call-template name="pad"><xsl:with-param name="length" select="9"/><xsl:with-param name="value" select="total/ncss"/></xsl:call-template>
     <xsl:text> </xsl:text>
-    <xsl:value-of select="Util:paddWithSpace(total/javadocs,9)" xmlns:Util="xalan://ccl.util.Util"/>
+    <xsl:call-template name="pad"><xsl:with-param name="length" select="9"/><xsl:with-param name="value" select="total/javadocs"/></xsl:call-template>
     <xsl:text> Total
 
 </xsl:text>
@@ -38,15 +54,15 @@
   </xsl:template>
 
   <xsl:template match="package">
-    <xsl:value-of select="Util:paddWithSpace(substring-before(java:java.lang.String.valueOf(position()),'.0'),java:java.lang.Math.max(string-length(count(../package)),3))" xmlns:Util="xalan://ccl.util.Util" xmlns:String="xalan://java.lang.String" xmlns:Math="xalan://java.lang.Math"/>
+    <xsl:call-template name="pad"><xsl:with-param name="length" select="java:java.lang.Math.max(string-length(count(../package)),3)"/><xsl:with-param name="value" select="substring-before(java:java.lang.String.valueOf(position()),'.0')"/></xsl:call-template>
     <xsl:text> </xsl:text>
-    <xsl:value-of select="Util:paddWithSpace(classes,9)" xmlns:Util="xalan://ccl.util.Util"/>
+    <xsl:call-template name="pad"><xsl:with-param name="length" select="9"/><xsl:with-param name="value" select="classes"/></xsl:call-template>
     <xsl:text> </xsl:text>
-    <xsl:value-of select="Util:paddWithSpace(functions,9)" xmlns:Util="xalan://ccl.util.Util"/>
+    <xsl:call-template name="pad"><xsl:with-param name="length" select="9"/><xsl:with-param name="value" select="functions"/></xsl:call-template>
     <xsl:text> </xsl:text>
-    <xsl:value-of select="Util:paddWithSpace(ncss,9)" xmlns:Util="xalan://ccl.util.Util"/>
+    <xsl:call-template name="pad"><xsl:with-param name="length" select="9"/><xsl:with-param name="value" select="ncss"/></xsl:call-template>
     <xsl:text> </xsl:text>
-    <xsl:value-of select="Util:paddWithSpace(javadocs,9)" xmlns:Util="xalan://ccl.util.Util"/>
+    <xsl:call-template name="pad"><xsl:with-param name="length" select="9"/><xsl:with-param name="value" select="javadocs"/></xsl:call-template>
     <xsl:text> </xsl:text>
     <xsl:value-of select="name"/>
     <xsl:text>
@@ -69,44 +85,44 @@
   </xsl:template>
 
   <xsl:template match="td">
-    <xsl:value-of select="Util:paddWithSpace(.,9)" xmlns:Util="xalan://ccl.util.Util"/>
+    <xsl:call-template name="pad"><xsl:with-param name="length" select="9"/><xsl:with-param name="value" select="."/></xsl:call-template>
     <xsl:text> </xsl:text>
   </xsl:template>
 
   <xsl:template match="objects">
-    <xsl:value-of select="java:ccl.util.Util.paddWithSpace('Nr.',java:java.lang.Math.max(string-length(count(object)),3))" xmlns:Util="xalan://ccl.util.Util" xmlns:String="xalan://java.lang.String" xmlns:Math="xalan://java.lang.Math"/>
+    <xsl:call-template name="pad"><xsl:with-param name="length" select="java:java.lang.Math.max(string-length(count(object)),3)"/><xsl:with-param name="value" select="'Nr.'"/></xsl:call-template>
     <xsl:text> NCSS Functions Classes Javadocs Class
 </xsl:text>
     <xsl:apply-templates select="object"/>
     <xsl:text>Average Object NCSS:             </xsl:text>
-    <xsl:value-of select="Util:paddWithSpace(averages/ncss,9)" xmlns:Util="xalan://ccl.util.Util"/>
+    <xsl:call-template name="pad"><xsl:with-param name="length" select="9"/><xsl:with-param name="value" select="averages/ncss"/></xsl:call-template>
     <xsl:text>
 Average Object Functions:        </xsl:text>
-    <xsl:value-of select="Util:paddWithSpace(averages/functions,9)" xmlns:Util="xalan://ccl.util.Util"/>
+    <xsl:call-template name="pad"><xsl:with-param name="length" select="9"/><xsl:with-param name="value" select="averages/functions"/></xsl:call-template>
     <xsl:text>
 Average Object Inner Classes:    </xsl:text>
-    <xsl:value-of select="Util:paddWithSpace(averages/classes,9)" xmlns:Util="xalan://ccl.util.Util"/>
+    <xsl:call-template name="pad"><xsl:with-param name="length" select="9"/><xsl:with-param name="value" select="averages/classes"/></xsl:call-template>
     <xsl:text>
 Average Object Javadoc Comments: </xsl:text>
-    <xsl:value-of select="Util:paddWithSpace(averages/javadocs,9)" xmlns:Util="xalan://ccl.util.Util"/>
+    <xsl:call-template name="pad"><xsl:with-param name="length" select="9"/><xsl:with-param name="value" select="averages/javadocs"/></xsl:call-template>
     <xsl:text>
 Program NCSS:                    </xsl:text>
-    <xsl:value-of select="Util:paddWithSpace(ncss,9)" xmlns:Util="xalan://ccl.util.Util"/>
+    <xsl:call-template name="pad"><xsl:with-param name="length" select="9"/><xsl:with-param name="value" select="ncss"/></xsl:call-template>
     <xsl:text>
 
 </xsl:text>
   </xsl:template>
 
   <xsl:template match="object">
-    <xsl:value-of select="java:ccl.util.Util.paddWithSpace(substring-before(java:java.lang.String.valueOf(position()),'.0'),java:java.lang.Math.max(string-length(count(../object)),3))"/>
+    <xsl:call-template name="pad"><xsl:with-param name="length" select="java:java.lang.Math.max(string-length(count(../object)),3)"/><xsl:with-param name="value" select="substring-before(java:java.lang.String.valueOf(position()),'.0')"/></xsl:call-template>
     <xsl:text> </xsl:text>
-    <xsl:value-of select="Util:paddWithSpace(ncss,4)" xmlns:Util="xalan://ccl.util.Util"/>
+    <xsl:call-template name="pad"><xsl:with-param name="length" select="4"/><xsl:with-param name="value" select="ncss"/></xsl:call-template>
     <xsl:text> </xsl:text>
-    <xsl:value-of select="Util:paddWithSpace(functions,9)" xmlns:Util="xalan://ccl.util.Util"/>
+    <xsl:call-template name="pad"><xsl:with-param name="length" select="9"/><xsl:with-param name="value" select="functions"/></xsl:call-template>
     <xsl:text> </xsl:text>
-    <xsl:value-of select="Util:paddWithSpace(classes,7)" xmlns:Util="xalan://ccl.util.Util"/>
+    <xsl:call-template name="pad"><xsl:with-param name="length" select="7"/><xsl:with-param name="value" select="classes"/></xsl:call-template>
     <xsl:text> </xsl:text>
-    <xsl:value-of select="Util:paddWithSpace(javadocs,8)" xmlns:Util="xalan://ccl.util.Util"/>
+    <xsl:call-template name="pad"><xsl:with-param name="length" select="8"/><xsl:with-param name="value" select="javadocs"/></xsl:call-template>
     <xsl:text> </xsl:text>
     <xsl:value-of select="name"/>
     <xsl:text>
@@ -114,33 +130,33 @@ Program NCSS:                    </xsl:text>
   </xsl:template>
 
   <xsl:template match="functions">
-    <xsl:value-of select="java:ccl.util.Util.paddWithSpace('Nr.',java:java.lang.Math.max(string-length(count(function)),3))"/>
+    <xsl:call-template name="pad"><xsl:with-param name="length" select="java:java.lang.Math.max(string-length(count(function)),3)"/><xsl:with-param name="value" select="'Nr.'"/></xsl:call-template>
     <xsl:text> NCSS CCN JVDC Function
 </xsl:text>
     <xsl:apply-templates select="function"/>
     <xsl:text>Average Function NCSS: </xsl:text>
-    <xsl:value-of select="Util:paddWithSpace(function_averages/ncss,10)" xmlns:Util="xalan://ccl.util.Util"/>
+    <xsl:call-template name="pad"><xsl:with-param name="length" select="10"/><xsl:with-param name="value" select="function_averages/ncss"/></xsl:call-template>
     <xsl:text>
 Average Function CCN:  </xsl:text>
-    <xsl:value-of select="Util:paddWithSpace(function_averages/ccn,10)" xmlns:Util="xalan://ccl.util.Util"/>
+    <xsl:call-template name="pad"><xsl:with-param name="length" select="10"/><xsl:with-param name="value" select="function_averages/ccn"/></xsl:call-template>
     <xsl:text>
 Average Function JVDC: </xsl:text>
-    <xsl:value-of select="Util:paddWithSpace(function_averages/javadocs,10)" xmlns:Util="xalan://ccl.util.Util"/>
+    <xsl:call-template name="pad"><xsl:with-param name="length" select="10"/><xsl:with-param name="value" select="function_averages/javadocs"/></xsl:call-template>
     <xsl:text>
 Program NCSS:          </xsl:text>
-    <xsl:value-of select="Util:paddWithSpace(ncss,10)" xmlns:Util="xalan://ccl.util.Util"/>
+    <xsl:call-template name="pad"><xsl:with-param name="length" select="10"/><xsl:with-param name="value" select="ncss"/></xsl:call-template>
     <xsl:text>
 </xsl:text>
   </xsl:template>
 
   <xsl:template match="function">
-    <xsl:value-of select="java:ccl.util.Util.paddWithSpace(substring-before(java:java.lang.String.valueOf(position()),'.0'),java:java.lang.Math.max(string-length(count(../function)),3))"/>
+    <xsl:call-template name="pad"><xsl:with-param name="length" select="java:java.lang.Math.max(string-length(count(../function)),3)"/><xsl:with-param name="value" select="substring-before(java:java.lang.String.valueOf(position()),'.0')"/></xsl:call-template>
     <xsl:text> </xsl:text>
-    <xsl:value-of select="Util:paddWithSpace(ncss,4)" xmlns:Util="xalan://ccl.util.Util"/>
+    <xsl:call-template name="pad"><xsl:with-param name="length" select="4"/><xsl:with-param name="value" select="ncss"/></xsl:call-template>
     <xsl:text> </xsl:text>
-    <xsl:value-of select="Util:paddWithSpace(ccn,3)" xmlns:Util="xalan://ccl.util.Util"/>
+    <xsl:call-template name="pad"><xsl:with-param name="length" select="3"/><xsl:with-param name="value" select="ccn"/></xsl:call-template>
     <xsl:text> </xsl:text>
-    <xsl:value-of select="Util:paddWithSpace(javadocs,4)" xmlns:Util="xalan://ccl.util.Util"/>
+    <xsl:call-template name="pad"><xsl:with-param name="length" select="4"/><xsl:with-param name="value" select="javadocs"/></xsl:call-template>
     <xsl:text> </xsl:text>
     <xsl:value-of select="name"/>
     <xsl:text>
