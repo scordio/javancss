@@ -102,7 +102,7 @@ Guide for JavaNCSS Committers
   {{{http://maven.apache.org/guides/mini/guide-encryption.html}the encryption guide}} on Maven site
 
   JavaNCSS <<<pom.xml>>> is actually configured to deploy the site on
-  {{{http://javancss.codehaus.org/}javancss.codehaus.org}}: see <<<distributionManagement/site>>> section.
+  {{{http://javancss.github.io/}javancss.github.io}}: see <<<distributionManagement/site>>> section.
   The site can be deployed at any time with <<<mvn site-deploy>>> command.
   {{{http://www.kclee.de/clemens/java/javancss/}http://www.kclee.de/clemens/java/javancss/}} can only be deployed by
   Clemens.
