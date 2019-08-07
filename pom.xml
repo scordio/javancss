@@ -13,7 +13,7 @@
     JavaNCSS is a simple command line utility which measures two standard source code metrics for the Java programming
     language. The metrics are collected globally, for each class and/or for each function.
   </description>
-  <url>https://github.com/JavaNCSS/javancss</url>
+  <url>https://javancss.github.io/</url>
 
   <inceptionYear>1997</inceptionYear>
 
@@ -51,6 +51,10 @@
       <name>Modello Development Repository</name>
       <url>https://oss.sonatype.org/content/repositories/snapshots</url>
     </snapshotRepository>
+    <site>
+      <id>github</id>
+      <url>scm:git:https://github.com/JavaNCSS/javancss.github.io.git</url>
+    </site>
   </distributionManagement>
 
   <developers>
@@ -209,6 +213,23 @@
           <artifactId>javacc-maven-plugin</artifactId>
           <version>2.6</version>
         </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-site-plugin</artifactId>
+          <version>3.7</version>
+          <configuration>
+            <skipDeploy>true</skipDeploy><!-- don't deploy site with maven-site-plugin -->
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-scm-publish-plugin</artifactId>
+          <version>1.1</version>
+          <configuration>
+            <scmBranch>master</scmBranch><!-- see https://help.github.com/articles/user-organization-and-project-pages/ -->
+            <content>${project.reporting.outputDirectory}</content><!-- mono-module doesn't require site:stage -->
+          </configuration>
+        </plugin>
       </plugins>
     </pluginManagement>
     <plugins>
@@ -352,6 +373,19 @@
                 </relocation>
               </relocations>
             </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-scm-publish-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>scm-publish</id>
+            <phase>site-deploy</phase><!-- deploy site with maven-scm-publish-plugin -->
+            <goals>
+              <goal>publish-scm</goal>
+            </goals>
           </execution>
         </executions>
       </plugin>
