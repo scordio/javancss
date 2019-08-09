@@ -2569,7 +2569,7 @@ void PrimarySuffix() :
 |
   "::" Identifier()
 |
-  Arguments()
+  Arguments() [ "{" MethodDeclaration() "}"]
 }
 
 void Literal() :

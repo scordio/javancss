@@ -56,6 +56,7 @@ public class ParseTest extends AbstractTestCase
         checkParse( 158 ); // JAVANCSS-48
         checkParse( 159 ); // default interface methods
         checkParse( 160 ); // java 8 lambda and method reference
+        checkParse( 161 ); // found by cobertura
     }
 
     private void checkParse( int testFile )
