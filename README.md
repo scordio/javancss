@@ -41,25 +41,20 @@ System Requirements
 Installation
 ============
 
-   See http://javancss.codehaus.org/
+   See http://javancss.github.io/
 
-Version
-=======
+Versions
+========
 
-   See http://javancss.codehaus.org/release-history.html
-
-Date
-====
-
-   See http://javancss.codehaus.org/release-history.html
+   See http://javancss.github.io/release-history.html
 
 URL
 ===
-   http://javancss.codehaus.org/
+   http://javancss.github.io/
    (was http://www.kclee.de/clemens/java/javancss/)
 
 Authors
 =======
 
    Chr. Clemens Lee, <clemens@kclee.de>
-   http://xircles.codehaus.org/projects/javancss/members 
+   https://github.com/orgs/JavaNCSS/people
